@@ -16,12 +16,11 @@ public class Study {
     private Member member;
     private String title;
     @Enumerated(EnumType.STRING)
-    private StudyType studyType;
+    private StudyType studyType; // ONLINE, OFFLINE
     private int numberOfMembers;
 //    private regionCode;
     private String studyInfo;
-    private StudyStatus studyStatus;
-    private LocalDateTime dateCreated;
+    private StudyStatus studyStatus; // CURR, COMP, END
     private LocalDateTime dateStudyStart;
     private LocalDateTime dateStudyEnd;
 }

@@ -15,6 +15,5 @@ public class MemberStudy {
     @ManyToOne
     @JoinColumn(name = "study_id")
     private Study study;
-    private LocalDateTime dateCreated;
     private LocalDateTime dateOkay;
 }

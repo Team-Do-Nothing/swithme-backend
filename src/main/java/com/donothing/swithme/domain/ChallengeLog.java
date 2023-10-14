@@ -1,15 +1,15 @@
 package com.donothing.swithme.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class ChallengeLog {
+public class ChallengeLog extends BaseEntity {
+
     @Id @GeneratedValue
     private Long chalLogId;
-//    private Member member;
-    private LocalDateTime dateCreated;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
     private String s3Url;
 }

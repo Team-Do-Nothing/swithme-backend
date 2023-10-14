@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-public class Challenge {
-    @Id
-    @GeneratedValue
+public class Challenge extends BaseEntity {
+
+    @Id @GeneratedValue
     private long challengeId;
     @ManyToOne
     @JoinColumn(name = "study_id")
@@ -18,7 +18,6 @@ public class Challenge {
     private int challengeFee;
     private String checkFormat;
     @Enumerated(EnumType.STRING)
-    private ChallengeStatus challengeStatus;
-    private LocalDateTime dateCreated;
+    private ChallengeStatus challengeStatus; // DAILY, SPECIAL
     private int challengeFeeAll;
 }
