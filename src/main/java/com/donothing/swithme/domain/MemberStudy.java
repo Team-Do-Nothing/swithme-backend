@@ -14,11 +14,11 @@ public class MemberStudy {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberStudyId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "study_id")
     private Study study;
 

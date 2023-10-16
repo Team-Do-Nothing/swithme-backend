@@ -13,10 +13,10 @@ public class ChallengeLog extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chalLogId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_chal_id")
     @Column(nullable = false)
-    private Member member;
+    private MemberChallenge memberChallenge;
 
     private String s3Url;
 }
