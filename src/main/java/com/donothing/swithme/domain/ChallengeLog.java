@@ -1,15 +1,22 @@
 package com.donothing.swithme.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor
 @Entity
-public class ChallengeLog extends BaseEntity {
+public class ChallengeLog extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chalLogId;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @Column(nullable = false)
     private Member member;
+
     private String s3Url;
 }
