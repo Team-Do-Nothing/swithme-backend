@@ -13,7 +13,7 @@ public class ChallengeLog extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chalLogId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_chal_id")
     @Column(nullable = false)
     private MemberChallenge memberChallenge;
