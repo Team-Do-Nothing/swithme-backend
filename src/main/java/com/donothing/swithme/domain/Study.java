@@ -14,7 +14,7 @@ public class Study {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studyId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 방장 id 가져오기 위한 컬럼
 
