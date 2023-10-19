@@ -3,12 +3,10 @@ package com.donothing.swithme.dto.member;
 import com.donothing.swithme.domain.GenderType;
 import com.donothing.swithme.domain.LoginType;
 import com.donothing.swithme.domain.Member;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -37,10 +35,11 @@ public class MemberJoinDto {
     @Size(min = 2, max = 16, message = "닉네임은 2글자 이상 16글자 이하여야 합니다.")
     private String nickname;
 
-    @NotBlank(message = "성별은 필수 입력입니다.")
+    @NotNull(message = "성별은 필수 입력입니다.")
     private GenderType gender;
 
-    @NotBlank
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @NotBlank

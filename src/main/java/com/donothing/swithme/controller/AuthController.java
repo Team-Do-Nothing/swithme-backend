@@ -1,6 +1,7 @@
 package com.donothing.swithme.controller;
 
 import com.donothing.swithme.dto.member.MemberJoinDto;
+import com.donothing.swithme.dto.member.MemberLoginDto;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +37,16 @@ public class AuthController {
             }
             throw new IllegalStateException("유효성 검사 실패");
         } else {
-            if (memberJoinDto.getPassword().equals(memberJoinDto.getPasswordConfirm())) {
+            if (!memberJoinDto.getPassword().equals(memberJoinDto.getPasswordConfirm())) {
                 throw new IllegalStateException("비밀번호가 일치하지 않습니다");
             }
             return new ResponseEntity<>(new ResponseDto(200, "회원가입 성공",
                     authService.signup(memberJoinDto)), HttpStatus.OK);
         }
     }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody MemberLoginDto memberLoginDto) {
+//        // 1. 회원 정보 조회
+//    }
 }
