@@ -1,7 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306
-    username: swithme
+    # 각자 PC에 만들어둔 DB 이름을 3306/( )?에 넣어 사용
+    url: jdbc:mysql://localhost:3306/testdb_swithme?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    # mysql에 생성한 사용자 계정 정보 사용
+    username: user_swithme
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
