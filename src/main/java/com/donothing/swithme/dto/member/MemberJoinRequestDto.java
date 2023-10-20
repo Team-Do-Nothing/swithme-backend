@@ -5,6 +5,7 @@ import com.donothing.swithme.domain.LoginType;
 import com.donothing.swithme.domain.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MemberJoinDto {
+public class MemberJoinRequestDto {
 
     @NotBlank(message = "이메일은 필수 입력입니다.")
     @Email(message = "이메일 양식을 지켜주세요.")
@@ -47,10 +48,10 @@ public class MemberJoinDto {
 
     private String introduce;
 
-    public Member toMember(String password) {
+    public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(this.email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .name(this.name)
                 .nickname(this.nickname)
                 .loginType(LoginType.NORMAL)
