@@ -22,8 +22,8 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    @Value("${jwt.secretkey")
-    private String secretkey;
+    @Value("${jwt.secretKey")
+    private String secretKey;
 
     // 토큰 유효시간 : 1 Hour
     private final long tokenValidTime = 1000L * 60 * 60;
@@ -33,7 +33,7 @@ public class JwtProvider {
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct
     protected void init() {
-        secretkey = Base64.getEncoder().encodeToString(secretkey.getBytes());
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
     public TokenDto createTokenDto(Authentication authentication) {
@@ -44,7 +44,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretkey)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
         return TokenDto.builder()
@@ -60,7 +60,7 @@ public class JwtProvider {
 
     // 토큰에서 회원정보 추출
     public String getUserPK(String accessToken) {
-        return Jwts.parserBuilder().setSigningKey(secretkey).build().parseClaimsJws(accessToken).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(accessToken).getBody().getSubject();
     }
 
     // Request의 Header에서 토큰 값을 가져옴 "Authorization" : "TOKEN값"
@@ -78,7 +78,7 @@ public class JwtProvider {
                 token = token.split(" ")[1].trim();
             }
 
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretkey).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
