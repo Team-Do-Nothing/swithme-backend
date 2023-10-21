@@ -19,7 +19,6 @@ public class CorsConfig {
         config.addAllowedMethod("*");
 
         source.registerCorsConfiguration("/api/**", config);
-        source.registerCorsConfiguration("/login_proc", config);
         return new CorsFilter(source);
     }
 }
