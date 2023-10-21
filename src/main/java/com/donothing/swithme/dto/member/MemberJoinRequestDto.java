@@ -10,11 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class MemberJoinRequestDto {
 
     @NotBlank(message = "이메일은 필수 입력입니다.")

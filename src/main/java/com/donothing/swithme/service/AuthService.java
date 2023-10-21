@@ -69,4 +69,11 @@ public class AuthService {
 //        Authentication authentication = jwtProvider.getAuthentication(accessToken);
 //        jwtProvider.logout(authentication.getName(), accessToken);
 //    }
+
+    /**
+     * 닉네임 중복체크
+     */
+    public boolean existsByNickName(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }
