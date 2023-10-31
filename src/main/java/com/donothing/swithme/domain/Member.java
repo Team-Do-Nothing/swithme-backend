@@ -52,4 +52,8 @@ public class Member extends BaseTimeEntity {
 
     @Column(precision = 10, scale = 2, nullable = false)
     private double temperature;
+
+    public Member(Long memberId) {
+        this.memberId = memberId;
+    }
 }

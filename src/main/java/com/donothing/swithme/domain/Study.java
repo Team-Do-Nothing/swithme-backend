@@ -1,5 +1,6 @@
 package com.donothing.swithme.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,4 +40,17 @@ public class Study {
     private LocalDateTime dateStudyStart;
 
     private LocalDateTime dateStudyEnd;
+
+    @Builder
+    public Study(Member member, String title, StudyType studyType, int numberOfMembers, String studyInfo,
+            StudyStatus studyStatus, LocalDateTime dateStudyStart, LocalDateTime dateStudyEnd) {
+        this.member = member;
+        this.title = title;
+        this.studyType = studyType;
+        this.numberOfMembers = numberOfMembers;
+        this.studyInfo = studyInfo;
+        this.studyStatus = studyStatus;
+        this.dateStudyStart = dateStudyStart;
+        this.dateStudyEnd = dateStudyEnd;
+    }
 }
