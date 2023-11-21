@@ -1,11 +1,14 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.Study;
-import com.donothing.swithme.dto.StudyRegisterRequest;
-import com.donothing.swithme.dto.StudyRegisterResponse;
+import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
+import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
 import com.donothing.swithme.repository.StudyRepository;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,8 +16,12 @@ import org.springframework.stereotype.Service;
 public class StudyService {
     private final StudyRepository studyRepository;
     @Transactional
-    public StudyRegisterResponse registerStudy(StudyRegisterRequest request) {
+    public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
         Study study = studyRepository.save(request.toEntity());
-        return new StudyRegisterResponse(study.getStudyId());
+        return new StudyRegisterResponseDto(study.getStudyId());
     }
+
+//    public Page<Study> getAllStudies(Pageable pageable) {
+//        return studyRepository.findStudy(pageable);
+//    }
 }

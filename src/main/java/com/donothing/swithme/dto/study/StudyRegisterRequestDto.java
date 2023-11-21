@@ -1,7 +1,8 @@
-package com.donothing.swithme.dto;
+package com.donothing.swithme.dto.study;
 
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.domain.StudyType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StudyRegisterRequest {
+public class StudyRegisterRequestDto {
     @NotNull(message = "카테고리 아이디는 필수입니다.")
     private Long categoryId;
 
@@ -35,11 +36,15 @@ public class StudyRegisterRequest {
     @NotNull(message = "스터디 정보는 필수입니다.")
     private String studyInfo;
 
+    @NotNull(message = "스터디 상태는 필수입니다.")
+    private StudyStatus studyStatus; // CURR, COMP, END
+
     public Study toEntity() {
         return Study.builder()
                 .member(new Member(memberId))
                 .title(title)
                 .studyType(studyType)
+                .studyStatus(studyStatus)
                 .numberOfMembers(numberOfMembers)
                 .studyInfo(studyInfo)
                 .build();

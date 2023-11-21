@@ -15,7 +15,6 @@ public class ChallengeLog extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_chal_id")
-//    @Column(nullable = false)
     private MemberChallenge memberChallenge;
 
     private String s3Url;
