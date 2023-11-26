@@ -15,21 +15,21 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-    private final JwtProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         // 헤더에서 JWT를 받아옴
-        String token = jwtProvider.resolveToken((HttpServletRequest) request);
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
         // 유효 토큰 검증
-        if (token != null && jwtProvider.validateToken(token)) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
 
             token = token.split(" ")[1].trim();
 
             // 토큰 유효 -> 토큰으로부터 유저 정보 가져옴
-            Authentication authentication = jwtProvider.getAuthentication(token);
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
             // SecurityContext 에 Authentication 객체를 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

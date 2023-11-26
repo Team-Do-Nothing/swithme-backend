@@ -1,6 +1,6 @@
 package com.donothing.swithme.service;
 
-import com.donothing.swithme.config.jwt.JwtProvider;
+import com.donothing.swithme.config.jwt.JwtTokenProvider;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.dto.member.MemberJoinRequestDto;
 import com.donothing.swithme.dto.member.MemberJoinResponseDto;
@@ -22,7 +22,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 자체 회원가입
@@ -55,7 +55,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
 
         // 4. 토큰 발급
         return tokenDto;
@@ -66,7 +66,7 @@ public class AuthService {
      */
 //    @Transactional
 //    public void logout(String accessToken) {
-//        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 //        jwtProvider.logout(authentication.getName(), accessToken);
 //    }
 
