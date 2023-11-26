@@ -1,8 +1,8 @@
 package com.donothing.swithme.dto.study;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class StudyRegisterResponseDto {
     private Long studyId;
 
