@@ -1,5 +1,8 @@
 package com.donothing.swithme.domain;
 
+import static com.donothing.swithme.common.Common.formatLocalDateTime;
+
+import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +20,7 @@ public class Study {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studyId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 방장 id 가져오기 위한 컬럼
 
@@ -54,5 +57,15 @@ public class Study {
         this.studyStatus = studyStatus;
         this.dateStudyStart = dateStudyStart;
         this.dateStudyEnd = dateStudyEnd;
+    }
+
+    public void update(StudyUpdateReqeustDto request) {
+        this.title = request.getTitle();
+        this.studyType = request.getStudyType();
+        this.numberOfMembers = request.getNumberOfMembers();
+        this.studyInfo = request.getStudyInfo();
+        this.studyStatus = request.getStudyStatus();
+        this.dateStudyStart = formatLocalDateTime(request.getDateStudyStart());
+        this.dateStudyEnd = formatLocalDateTime(request.getDateStudyEnd());
     }
 }

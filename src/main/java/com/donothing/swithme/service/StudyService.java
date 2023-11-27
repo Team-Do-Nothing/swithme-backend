@@ -5,6 +5,7 @@ import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
 import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
 import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
+import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
 import com.donothing.swithme.repository.StudyRepository;
 import java.util.NoSuchElementException;
 import javax.transaction.Transactional;
@@ -30,6 +31,17 @@ public class StudyService {
         });
 
         return new StudyDetailResponseDto(study);
+    }
+
+    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateReqeustDto reuqest) {
+        Study study = studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+
+        study.update(reuqest);
+        return null;
     }
 
 //    public Page<Study> getAllStudies(Pageable pageable) {

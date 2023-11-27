@@ -4,6 +4,7 @@ import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
 import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
 import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
+import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
 import com.donothing.swithme.service.StudyService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,4 +46,13 @@ public class StudyController {
                 studyService.detailStudyByStudyId(studyId)),
                 HttpStatus.OK);
     }
+
+    @PutMapping("/{studyId}")
+    public ResponseEntity<ResponseDto<StudyDetailResponseDto>> updateStudy(@PathVariable String studyId,
+            @RequestBody StudyUpdateReqeustDto reuqest) {
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 수정 성공",
+                studyService.updateStudy(studyId, reuqest)),
+                HttpStatus.OK);
+    }
+
 }
