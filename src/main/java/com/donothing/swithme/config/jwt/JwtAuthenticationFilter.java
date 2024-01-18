@@ -3,6 +3,7 @@ package com.donothing.swithme.config.jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -20,13 +21,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        // 헤더에서 JWT를 받아옴
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        // 1. Request Header 에서 JWT 토큰 추출
+        String token = resolveToken((HttpServletRequest) request);
 
-        // 유효 토큰 검증
+        // 2. validateToken 으로 토큰 유효성 검증
         if (token != null && jwtTokenProvider.validateToken(token)) {
-
-            token = token.split(" ")[1].trim();
 
             // 토큰 유효 -> 토큰으로부터 유저 정보 가져옴
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
@@ -35,5 +34,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
 
         chain.doFilter(request, response);
+    }
+
+    // Request Header 에서 토큰 정보 추출
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

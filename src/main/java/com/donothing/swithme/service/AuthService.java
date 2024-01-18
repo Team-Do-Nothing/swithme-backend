@@ -47,9 +47,6 @@ public class AuthService {
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
 
-        Member member = memberRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalStateException("해당 사용자를 찾을 수 없습니다."));
-
         // 2. 실제로 검증 (사용자 비밀번호 체크)
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
