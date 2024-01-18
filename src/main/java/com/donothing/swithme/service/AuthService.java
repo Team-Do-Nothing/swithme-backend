@@ -1,6 +1,6 @@
 package com.donothing.swithme.service;
 
-import com.donothing.swithme.config.jwt.JwtProvider;
+import com.donothing.swithme.config.jwt.JwtTokenProvider;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.dto.member.MemberJoinRequestDto;
 import com.donothing.swithme.dto.member.MemberJoinResponseDto;
@@ -22,7 +22,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 자체 회원가입
@@ -47,15 +47,12 @@ public class AuthService {
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
 
-        Member member = memberRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalStateException("해당 사용자를 찾을 수 없습니다."));
-
         // 2. 실제로 검증 (사용자 비밀번호 체크)
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = jwtProvider.createTokenDto(authentication);
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(authentication);
 
         // 4. 토큰 발급
         return tokenDto;
@@ -66,7 +63,7 @@ public class AuthService {
      */
 //    @Transactional
 //    public void logout(String accessToken) {
-//        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 //        jwtProvider.logout(authentication.getName(), accessToken);
 //    }
 
