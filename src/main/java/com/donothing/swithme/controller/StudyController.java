@@ -1,13 +1,17 @@
 package com.donothing.swithme.controller;
 
+import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
+import com.donothing.swithme.dto.study.StudyListResponseDto;
 import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
 import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
+import com.donothing.swithme.dto.study.StudySearchRequest;
 import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
 import com.donothing.swithme.service.StudyService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +39,8 @@ public class StudyController {
     }
 
     @GetMapping
-    public void getStudies(Pageable pageable) {
-//        studyService.getAllStudies(pageable);
-//        return new ResponseEntity<>()
+    public Page<Study> getStudies(StudySearchRequest condition, Pageable pageable) {
+        return studyService.getStudies(condition, pageable);
     }
 
     @GetMapping("/{studyId}")

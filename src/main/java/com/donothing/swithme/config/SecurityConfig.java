@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/auth/signup").permitAll() // 해당하는 uri 접근만 모두 허용
                 .antMatchers("/api/v1/auth/login").permitAll()
                 // TODO 추후 삭제 예정
-                .antMatchers("/api/v1/study/*").permitAll()
+                .antMatchers("/api/v1/study/**").permitAll()
                 .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll() // 해당하는 uri 접근만 모두 허용
                 .anyRequest().authenticated() // 이외의 접근 권한 필요
 //                .antMatchers("/admin/**").hasRole("ADMIN")
