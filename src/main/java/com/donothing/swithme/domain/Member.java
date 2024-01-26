@@ -1,16 +1,21 @@
 package com.donothing.swithme.domain;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member extends BaseTimeEntity {
+public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -52,6 +57,17 @@ public class Member extends BaseTimeEntity {
 
     private Double temperature;
 
+    /**
+     * 검성 코드 ====
+     */
+    @Column
+//    @Enumerated()
+    private String authority;
+
+    /*
+    검성 코드 =====
+     */
+
     // 자체 회원가입
     @Builder
     public Member(String email, String password, String name, String nickname, LoginType loginType, GenderType gender,
@@ -71,5 +87,35 @@ public class Member extends BaseTimeEntity {
 
     public Member(Long memberId) {
         this.memberId = memberId;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(authority));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
