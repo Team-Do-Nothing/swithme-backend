@@ -29,12 +29,12 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
-                .authorizeRequests() // 요청에 대한 사용권한 체크
-                .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll() // 해당하는 uri 접근만 모두 허용
-                .anyRequest().authenticated() // 이외의 접근 권한 필요
+//                .authorizeRequests() // 요청에 대한 사용권한 체크
+//                .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll() // 해당하는 uri 접근만 모두 허용
+//                .anyRequest().authenticated() // 이외의 접근 권한 필요
 //                .antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/user/**").hasRole("USER")
-                .and()
+//                .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
