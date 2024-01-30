@@ -55,7 +55,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private Boolean withdraw;
 
-    @Column(precision = 10, scale = 2, nullable = false)
     private Double temperature;
 
     /**
@@ -84,6 +83,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.introduce = introduce;
         this.withdraw = false;
         this.temperature = 36.5;
+    }
+
+    public Member(Long memberId) {
+        this.memberId = memberId;
     }
 
     @Override

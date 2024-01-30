@@ -1,13 +1,19 @@
 package com.donothing.swithme.domain;
 
+import static com.donothing.swithme.common.Common.formatLocalDateTime;
+
+import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@ToString
 @Entity
 public class Study {
 
@@ -39,4 +45,27 @@ public class Study {
     private LocalDateTime dateStudyStart;
 
     private LocalDateTime dateStudyEnd;
+
+    @Builder
+    public Study(Member member, String title, StudyType studyType, int numberOfMembers, String studyInfo,
+            StudyStatus studyStatus, LocalDateTime dateStudyStart, LocalDateTime dateStudyEnd) {
+        this.member = member;
+        this.title = title;
+        this.studyType = studyType;
+        this.numberOfMembers = numberOfMembers;
+        this.studyInfo = studyInfo;
+        this.studyStatus = studyStatus;
+        this.dateStudyStart = dateStudyStart;
+        this.dateStudyEnd = dateStudyEnd;
+    }
+
+    public void update(StudyUpdateReqeustDto request) {
+        this.title = request.getTitle();
+        this.studyType = request.getStudyType();
+        this.numberOfMembers = request.getNumberOfMembers();
+        this.studyInfo = request.getStudyInfo();
+        this.studyStatus = request.getStudyStatus();
+        this.dateStudyStart = formatLocalDateTime(request.getDateStudyStart());
+        this.dateStudyEnd = formatLocalDateTime(request.getDateStudyEnd());
+    }
 }

@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,6 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
+        // ===
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -33,13 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    private UserDetails createUserDetails(Member member) {
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
-
-        return new User(
-                String.valueOf(member.getMemberId()),
-                member.getPassword(),
-                Collections.singleton(grantedAuthority)
-        );
-    }
+//    private UserDetails createUserDetails(Member member) {
+//        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority())
+//        return CustomUserDetails.of(member);//    }
 }

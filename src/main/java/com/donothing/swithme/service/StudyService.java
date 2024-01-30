@@ -1,0 +1,57 @@
+package com.donothing.swithme.service;
+
+import com.donothing.swithme.common.PagingData;
+import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.study.StudyDetailResponseDto;
+import com.donothing.swithme.dto.study.StudyListResponseDto;
+import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
+import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
+import com.donothing.swithme.dto.study.StudySearchRequest;
+import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
+import com.donothing.swithme.repository.StudyRepository;
+import java.util.List;
+import java.util.NoSuchElementException;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class StudyService {
+    private final StudyRepository studyRepository;
+
+    @Transactional
+    public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
+        Study study = studyRepository.save(request.toEntity());
+        return new StudyRegisterResponseDto(study.getStudyId());
+    }
+
+    public StudyDetailResponseDto detailStudyByStudyId(String studyId) {
+        Study study = studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+        return new StudyDetailResponseDto(study);
+    }
+
+    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateReqeustDto reuqest) {
+        Study study = studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+
+        study.update(reuqest);
+        return null;
+    }
+
+    public Page<Study> getStudies(StudySearchRequest condition, Pageable pageable) {
+        return studyRepository.searchStudies(condition, pageable);
+    }
+}
