@@ -73,7 +73,7 @@ test {
 }
 
 // script for querydsl
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "src/main/generated"
 querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
@@ -81,9 +81,17 @@ querydsl {
 sourceSets {
 	main {
 		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+			srcDirs += [querydslDir]
 		}
 	}
+}
+
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslDir)
+}
+
+clean.doLast {
+	file(querydslDir).deleteDir()
 }
 
 configurations {

@@ -1,6 +1,5 @@
 package com.donothing.swithme.repository;
 
-
 import static com.donothing.swithme.domain.QStudy.study;
 
 import com.donothing.swithme.domain.Member;
