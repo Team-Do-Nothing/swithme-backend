@@ -2,19 +2,15 @@ package com.donothing.swithme.repository;
 
 import static com.donothing.swithme.domain.QStudy.study;
 
-import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.QMember;
 import com.donothing.swithme.domain.QStudy;
 import com.donothing.swithme.domain.Study;
-import com.donothing.swithme.dto.study.StudyListResponseDto;
 import com.donothing.swithme.dto.study.StudySearchRequest;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import org.hibernate.criterion.Projection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
