@@ -81,7 +81,7 @@ querydsl {
 sourceSets {
 	main {
 		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+			srcDirs += [querydslDir]
 		}
 	}
 }
@@ -89,6 +89,12 @@ sourceSets {
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
+
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+	if(file(querydslDir).exists())
+		delete(file(querydslDir))
 }
