@@ -97,6 +97,12 @@ clean.doLast {
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
+
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+	if(file(querydslDir).exists())
+		delete(file(querydslDir))
 }
