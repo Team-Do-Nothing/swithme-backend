@@ -15,6 +15,11 @@ spring:
       hibernate:
         #        show_sql: true
         format_sql: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   redis:
     host: localhost
     port: 6379
@@ -25,5 +30,5 @@ logging:
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
-  access-token-expire: ${JWT_ACCESS_TOKEN_EXPIRATION}
-  refresh-token-expire: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  access-token-expire: 1000 * 60 * 30 #${JWT_ACCESS_TOKEN_EXPIRATION}
+  refresh-token-expire: 1000 * 60 * 60 * 24 * 7 #${JWT_REFRESH_TOKEN_EXPIRATION}
