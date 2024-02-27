@@ -68,4 +68,6 @@ public class Study {
         this.dateStudyStart = formatLocalDateTime(request.getDateStudyStart());
         this.dateStudyEnd = formatLocalDateTime(request.getDateStudyEnd());
     }
+
+    public Study(Long studyId) { this.studyId = studyId; }
 }
