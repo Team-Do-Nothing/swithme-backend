@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member extends BaseTimeEntity implements UserDetails {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -50,28 +50,21 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(columnDefinition = "TEXT", length = 1000)
     private String introduce;
 
-    private LocalDateTime dateWithdraw; // 멤버 탈퇴일자
+    private LocalDateTime dateWithdraw; // 멤버 탈퇴 일자
 
     @Column(nullable = false)
     private Boolean withdraw;
 
     private Double temperature;
 
-    /**
-     * 검성 코드 ====
-     */
-    @Column
-//    @Enumerated()
-    private String authority;
-
-    /*
-    검성 코드 =====
-     */
+    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     // 자체 회원가입
     @Builder
     public Member(String email, String password, String name, String nickname, LoginType loginType, GenderType gender,
-                  LocalDate birthdate, String phone, String introduce) {
+                  LocalDate birthdate, String phone, String introduce, Authority authority) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -83,39 +76,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.introduce = introduce;
         this.withdraw = false;
         this.temperature = 36.5;
+        this.authority = authority;
     }
 
     public Member(Long memberId) {
         this.memberId = memberId;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(authority));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

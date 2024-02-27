@@ -1,4 +1,4 @@
-package com.donothing.swithme.service;
+package com.donothing.swithme.service.member;
 
 import com.donothing.swithme.config.jwt.JwtTokenProvider;
 import com.donothing.swithme.domain.Member;
@@ -6,7 +6,7 @@ import com.donothing.swithme.dto.member.MemberJoinRequestDto;
 import com.donothing.swithme.dto.member.MemberJoinResponseDto;
 import com.donothing.swithme.dto.member.MemberLoginRequestDto;
 import com.donothing.swithme.dto.member.TokenDto;
-import com.donothing.swithme.repository.MemberRepository;
+import com.donothing.swithme.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -44,8 +44,12 @@ public class AuthService {
      */
     @Transactional
     public TokenDto login(MemberLoginRequestDto loginRequestDto) throws RuntimeException {
+
         // 1. Login ID/PW 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
+
+        Member member = memberRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() ->
+                new IllegalStateException("찾을 수 없는 계정입니다."));
 
         // 2. 실제로 검증 (사용자 비밀번호 체크)
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
@@ -61,16 +65,9 @@ public class AuthService {
     /**
      * 로그아웃
      */
-//    @Transactional
-//    public void logout(String accessToken) {
-//        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-//        jwtProvider.logout(authentication.getName(), accessToken);
-//    }
-
-    /**
-     * 닉네임 중복체크
-     */
-    public boolean existsByNickName(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+    @Transactional
+    public void logout(String accessToken) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        jwtTokenProvider.logout(authentication.getName(), accessToken);
     }
 }
