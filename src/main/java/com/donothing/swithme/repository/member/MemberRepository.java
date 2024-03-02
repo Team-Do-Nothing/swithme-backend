@@ -1,4 +1,4 @@
-package com.donothing.swithme.repository;
+package com.donothing.swithme.repository.member;
 
 import com.donothing.swithme.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,5 +1,6 @@
 package com.donothing.swithme.dto.member;
 
+import com.donothing.swithme.domain.Authority;
 import com.donothing.swithme.domain.GenderType;
 import com.donothing.swithme.domain.LoginType;
 import com.donothing.swithme.domain.Member;
@@ -24,7 +25,7 @@ public class MemberJoinRequestDto {
             message = "비밀번호는 6~20자리수여야 합니다. 영문, 숫자, 특수문자를 1개 이상 포함해야 합니다.")
     private String password;
 
-    @NotBlank(message = "비밀번호 재입력은 필수 입력입니다.")
+    @NotBlank(message = "비밀번호 재입력은 필수사항입니다.")
     private String passwordConfirm;
 
     @NotBlank
@@ -53,6 +54,7 @@ public class MemberJoinRequestDto {
                 .name(this.name)
                 .nickname(this.nickname)
                 .loginType(LoginType.NORMAL)
+                .authority(Authority.ROLE_USER)
                 .gender(this.gender)
                 .birthdate(this.birthdate)
                 .phone(this.phone)

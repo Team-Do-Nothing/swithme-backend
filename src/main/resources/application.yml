@@ -9,12 +9,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
-#      ddl-auto: create
+#    ddl-auto:
+      ddl-auto: create
     properties:
       hibernate:
         #        show_sql: true
         format_sql: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   redis:
     host: localhost
     port: 6379
@@ -25,5 +30,3 @@ logging:
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
-  access-token-expire: ${JWT_ACCESS_TOKEN_EXPIRATION}
-  refresh-token-expire: ${JWT_REFRESH_TOKEN_EXPIRATION}
