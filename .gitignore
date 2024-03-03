@@ -40,4 +40,4 @@ out/
 src/main/resources/application.yml
 
 ### Qfile
-src/main/generated/querydsl
+/src/main/generated/
