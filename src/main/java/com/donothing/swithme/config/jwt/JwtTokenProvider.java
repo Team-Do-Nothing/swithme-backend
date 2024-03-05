@@ -1,6 +1,9 @@
 package com.donothing.swithme.config.jwt;
 
+import com.donothing.swithme.domain.Member;
+import com.donothing.swithme.dto.member.MemberDetails;
 import com.donothing.swithme.dto.member.TokenDto;
+import com.donothing.swithme.service.member.CustomuserDetailsService;
 import io.jsonwebtoken.*;
 
 import io.jsonwebtoken.io.Decoders;
@@ -29,8 +32,12 @@ public class JwtTokenProvider {
     private static final long REFRESH_TOKEN_EXPIRATION_TIMES = 1000 * 60 * 60 * 24 * 7; // 7일
 
     private final Key key;
+    
+    //TODO: 추가
+    private final CustomuserDetailsService customuserDetailsService;
 
-    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey, CustomuserDetailsService customuserDetailsService) {
+        this.customuserDetailsService = customuserDetailsService;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -47,6 +54,7 @@ public class JwtTokenProvider {
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION_TIMES);
         String accessToken = Jwts.builder()
+                // TODO: email
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORIZATION_KEY, authorities)   // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp":
@@ -84,7 +92,8 @@ public class JwtTokenProvider {
 
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
-
+        // TODO: 수정 사항 -> userPrincipal : null
+//        MemberDetails member = (MemberDetails) customuserDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

@@ -1,6 +1,7 @@
 package com.donothing.swithme.service.member;
 
 import com.donothing.swithme.domain.Member;
+import com.donothing.swithme.dto.member.MemberDetails;
 import com.donothing.swithme.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,7 @@ public class CustomuserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("username : " + username);
         return memberRepository.findByEmail(username)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new IllegalStateException("이메일을 찾을 수 없습니다."));
@@ -32,11 +34,13 @@ public class CustomuserDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(Member member) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
-        return new User(
-                String.valueOf(member.getMemberId()),
-                member.getPassword(),
-                Collections.singleton(grantedAuthority)
-        );
+        // TODO: 수정사항 (customDetail)
+        return new MemberDetails(member);
+//        return new User(
+//                String.valueOf(member.getMemberId()),
+//                member.getPassword(),
+//                Collections.singleton(grantedAuthority)
+//        );
 
     }
 }
