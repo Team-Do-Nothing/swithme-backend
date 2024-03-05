@@ -9,12 +9,13 @@ spring:
 
   jpa:
     hibernate:
+#    ddl-auto:
       ddl-auto: none
-#      ddl-auto: create
     properties:
       hibernate:
         #        show_sql: true
         format_sql: true
+
   redis:
     host: localhost
     port: 6379
@@ -27,6 +28,4 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret-key: 1111
-  access-token-expire: 1111
-  refresh-token-expire: 1111
+  secret-key: ${JWT_SECRET_KEY}
