@@ -2,12 +2,7 @@ package com.donothing.swithme.controller;
 
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.response.ResponseDto;
-import com.donothing.swithme.dto.study.StudyDetailResponseDto;
-import com.donothing.swithme.dto.study.StudyListResponseDto;
-import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
-import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
-import com.donothing.swithme.dto.study.StudySearchRequest;
-import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
+import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.service.StudyService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/study")
@@ -58,4 +47,34 @@ public class StudyController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/{studyId}")
+    public ResponseEntity<ResponseDto<StudyCommentListResponseDto>> getCommentList(@PathVariable String studyId) {
+        return new ResponseEntity<>(new ResponseDto<>(200, "해당 스터디 댓글 내용 조회 성공",
+                studyService.getCommentList(studyId)),
+                HttpStatus.OK);
+    }
+    @PostMapping("/comment/{studyId}")
+    public ResponseEntity<ResponseDto<Void>> comment(@PathVariable String studyId,
+                                                                           @RequestBody StudyCommentReqeustDto reuqest) {
+//        studyService.comment(studyId, reuqest);
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 댓글 달기 성공",
+                null),
+                HttpStatus.OK);
+    }
+
+    @PutMapping("/comment/{studyId}")
+    public ResponseEntity<ResponseDto<StudyDetailResponseDto>> updateComment(@PathVariable String studyId,
+                                                                       @RequestBody StudyUpdateReqeustDto reuqest) {
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 댓글 달기 성공",
+                studyService.updateStudy(studyId, reuqest)),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/comment/{studyId}")
+    public ResponseEntity<ResponseDto<StudyDetailResponseDto>> deleteComment(@PathVariable String studyId,
+                                                                             @RequestBody StudyUpdateReqeustDto reuqest) {
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 댓글 달기 성공",
+                studyService.updateStudy(studyId, reuqest)),
+                HttpStatus.OK);
+    }
 }

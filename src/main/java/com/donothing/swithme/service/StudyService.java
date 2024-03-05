@@ -2,12 +2,7 @@ package com.donothing.swithme.service;
 
 import com.donothing.swithme.common.PagingData;
 import com.donothing.swithme.domain.Study;
-import com.donothing.swithme.dto.study.StudyDetailResponseDto;
-import com.donothing.swithme.dto.study.StudyListResponseDto;
-import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
-import com.donothing.swithme.dto.study.StudyRegisterResponseDto;
-import com.donothing.swithme.dto.study.StudySearchRequest;
-import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
+import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.repository.StudyRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,26 +27,32 @@ public class StudyService {
     }
 
     public StudyDetailResponseDto detailStudyByStudyId(String studyId) {
-        Study study = studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
-            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
-            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
-        });
-
+        Study study = validationAndGetStudy(studyId);
         return new StudyDetailResponseDto(study);
     }
 
     public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateReqeustDto reuqest) {
-        Study study = studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
-            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
-            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
-        });
-
-
+        Study study = validationAndGetStudy(studyId);
         study.update(reuqest);
+
         return null;
     }
 
     public Page<Study> getStudies(StudySearchRequest condition, Pageable pageable) {
         return studyRepository.searchStudies(condition, pageable);
+    }
+
+    public StudyCommentListResponseDto getCommentList(String studyId) {
+        validationAndGetStudy(studyId);
+
+        
+        return null;
+    }
+
+    public Study validationAndGetStudy(String studyId) {
+        return studyRepository.findById(Long.parseLong(studyId)).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
     }
 }
