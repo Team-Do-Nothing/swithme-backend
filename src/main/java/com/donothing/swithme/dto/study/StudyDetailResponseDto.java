@@ -12,7 +12,7 @@ import lombok.Getter;
 public class StudyDetailResponseDto {
     private Long studyId;
 
-    private MemberInfoResponseDto member;
+    private MemberInfoResponseDto createdMember;
 
     private String title;
 
@@ -32,7 +32,7 @@ public class StudyDetailResponseDto {
 
     public StudyDetailResponseDto(Study study) {
         this.studyId = study.getStudyId();
-        this.member = MemberInfoResponseDto.builder().
+        this.createdMember = MemberInfoResponseDto.builder().
                 memberId(study.getMember().getMemberId()).
                 name(study.getMember().getName()).
                 nickname(study.getMember().getNickname()).
