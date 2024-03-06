@@ -42,13 +42,13 @@ public class Study {
     @Column(nullable = false)
     private StudyStatus studyStatus; // CURR, COMP, END
 
-    private LocalDateTime dateStudyStart;
+    private String dateStudyStart;
 
-    private LocalDateTime dateStudyEnd;
+    private String dateStudyEnd;
 
     @Builder
     public Study(Member member, String title, StudyType studyType, int numberOfMembers, String studyInfo,
-            StudyStatus studyStatus, LocalDateTime dateStudyStart, LocalDateTime dateStudyEnd) {
+            StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
         this.member = member;
         this.title = title;
         this.studyType = studyType;
@@ -65,8 +65,8 @@ public class Study {
         this.numberOfMembers = request.getNumberOfMembers();
         this.studyInfo = request.getStudyInfo();
         this.studyStatus = request.getStudyStatus();
-        this.dateStudyStart = formatLocalDateTime(request.getDateStudyStart());
-        this.dateStudyEnd = formatLocalDateTime(request.getDateStudyEnd());
+        this.dateStudyStart = request.getDateStudyStart();
+        this.dateStudyEnd = request.getDateStudyEnd();
     }
 
     public Study(Long studyId) { this.studyId = studyId; }

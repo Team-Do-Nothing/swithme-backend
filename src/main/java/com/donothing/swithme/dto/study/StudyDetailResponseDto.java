@@ -24,11 +24,11 @@ public class StudyDetailResponseDto {
 
     private StudyStatus studyStatus; // CURR, COMP, END
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String dateStudyStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyEnd;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String dateStudyEnd;
 
     public StudyDetailResponseDto(Study study) {
         this.studyId = study.getStudyId();

@@ -6,6 +6,7 @@ import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.domain.StudyType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -49,12 +49,12 @@ public class StudyRegisterRequestDto {
     private String studyInfo;
 
     @NotNull(message = "스터디 시작날짜는 필수입니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyStart;
+    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
+    private String dateStudyStart;
 
     @NotNull(message = "스터디 마감날짜는 필수입니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyEnd;
+    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
+    private String dateStudyEnd;
 
     public Study toEntity() {
         return Study.builder()
