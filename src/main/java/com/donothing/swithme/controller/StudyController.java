@@ -1,30 +1,25 @@
 package com.donothing.swithme.controller;
 
 import com.donothing.swithme.domain.Study;
-import com.donothing.swithme.dto.member.MemberDetails;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.service.StudyService;
 import javax.validation.Valid;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/study")
 @RequiredArgsConstructor
-@Api(value = "스터디 관련 API")
+@Api(tags = {"스터디 관련 API"})
 public class StudyController {
 
     private final StudyService studyService;
@@ -32,7 +27,8 @@ public class StudyController {
     @PostMapping("/register")
     @ApiOperation(value = "스터디 등록", notes = "스터디 등록하는 API 입니다.")
     public ResponseEntity<ResponseDto<StudyRegisterResponseDto>> registerStudy(@RequestBody @Valid
-        StudyRegisterRequestDto request, @AuthenticationPrincipal MemberDetails user) {
+        StudyRegisterRequestDto request, @AuthenticationPrincipal UserDetails user) {
+        request.setMemberId(Long.valueOf(user.getUsername()));
         return new ResponseEntity<>(new ResponseDto<>(201, "스터디 생성 성공",
                 studyService.registerStudy(request)),
                 HttpStatus.CREATED);
