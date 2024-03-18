@@ -1,11 +1,14 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.common.PagingData;
+import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.*;
+import com.donothing.swithme.repository.CommentRepository;
 import com.donothing.swithme.repository.StudyRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
+
+    private final CommentRepository commentRepository;
 
     @Transactional
     public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
@@ -42,11 +47,28 @@ public class StudyService {
         return studyRepository.searchStudies(condition, pageable);
     }
 
-    public StudyCommentListResponseDto getCommentList(String studyId) {
+    public List<StudyCommentListResponseDto> getCommentList(String studyId) {
         validationAndGetStudy(studyId);
+        List<Comment> allComments = commentRepository.findByStudy_StudyId(Long.valueOf(studyId));
 
-        
-        return null;
+        // 대댓글이 아닌 댓글들을 추출하여 StudyCommentListResponseDto로 매핑
+        List<StudyCommentListResponseDto> comments = allComments.stream()
+                .filter(c -> c.getCommentTag() == null) // 대댓글이 아닌 댓글 필터링
+                .map(StudyCommentListResponseDto::new)
+                .collect(Collectors.toList());
+
+        // 각 댓글에 대해 대댓글 추가
+        for (StudyCommentListResponseDto comment : comments) {
+            List<StudyCommentListResponseDto> recommnet = allComments.stream()
+                    .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
+                    .map(StudyCommentListResponseDto::new)
+                    .collect(Collectors.toList());
+
+            comment.setRecommnet(recommnet);
+        }
+
+        return comments;
+
     }
 
     public Study validationAndGetStudy(String studyId) {
@@ -54,5 +76,12 @@ public class StudyService {
             log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
             return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
         });
+    }
+
+    public void comment(String studyId, StudyCommentReqeustDto reuqest) {
+        Study study = validationAndGetStudy(studyId);
+        commentRepository.save(
+                reuqest.toEntity(Long.parseLong(studyId),
+                        Long.parseLong(studyId)));
     }
 }
