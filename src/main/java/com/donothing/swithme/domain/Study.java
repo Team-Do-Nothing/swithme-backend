@@ -1,14 +1,11 @@
 package com.donothing.swithme.domain;
 
-import static com.donothing.swithme.common.Common.formatLocalDateTime;
-
-import com.donothing.swithme.dto.study.StudyUpdateReqeustDto;
+import com.donothing.swithme.dto.study.StudyUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import lombok.ToString;
 
 @Getter
@@ -42,13 +39,13 @@ public class Study {
     @Column(nullable = false)
     private StudyStatus studyStatus; // CURR, COMP, END
 
-    private LocalDateTime dateStudyStart;
+    private String dateStudyStart;
 
-    private LocalDateTime dateStudyEnd;
+    private String dateStudyEnd;
 
     @Builder
     public Study(Member member, String title, StudyType studyType, int numberOfMembers, String studyInfo,
-            StudyStatus studyStatus, LocalDateTime dateStudyStart, LocalDateTime dateStudyEnd) {
+            StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
         this.member = member;
         this.title = title;
         this.studyType = studyType;
@@ -59,14 +56,14 @@ public class Study {
         this.dateStudyEnd = dateStudyEnd;
     }
 
-    public void update(StudyUpdateReqeustDto request) {
+    public void update(StudyUpdateRequestDto request) {
         this.title = request.getTitle();
         this.studyType = request.getStudyType();
         this.numberOfMembers = request.getNumberOfMembers();
         this.studyInfo = request.getStudyInfo();
         this.studyStatus = request.getStudyStatus();
-        this.dateStudyStart = formatLocalDateTime(request.getDateStudyStart());
-        this.dateStudyEnd = formatLocalDateTime(request.getDateStudyEnd());
+        this.dateStudyStart = request.getDateStudyStart();
+        this.dateStudyEnd = request.getDateStudyEnd();
     }
 
     public Study(Long studyId) { this.studyId = studyId; }

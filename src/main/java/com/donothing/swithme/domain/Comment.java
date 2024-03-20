@@ -1,5 +1,6 @@
 package com.donothing.swithme.domain;
 
+import com.donothing.swithme.dto.study.StudyCommentUpdateRequestDto;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +13,12 @@ import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@ToString
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -44,5 +47,9 @@ public class Comment extends BaseTimeEntity {
         this.comment = comment;
         this.commentTag = commentTag;
         this.deletedFlag = deletedFlag;
+    }
+
+    public void update(StudyCommentUpdateRequestDto request) {
+        this.comment = request.getComment();
     }
 }

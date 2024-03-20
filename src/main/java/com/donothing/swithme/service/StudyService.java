@@ -1,6 +1,5 @@
 package com.donothing.swithme.service;
 
-import com.donothing.swithme.common.PagingData;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.*;
@@ -13,7 +12,6 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +34,7 @@ public class StudyService {
         return new StudyDetailResponseDto(study);
     }
 
-    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateReqeustDto reuqest) {
+    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateRequestDto reuqest) {
         Study study = validationAndGetStudy(studyId);
         study.update(reuqest);
 
@@ -81,7 +79,26 @@ public class StudyService {
     public void comment(String studyId, StudyCommentReqeustDto reuqest) {
         Study study = validationAndGetStudy(studyId);
         commentRepository.save(
-                reuqest.toEntity(Long.parseLong(studyId),
+                reuqest.toEntity(reuqest.getMemberId(),
                         Long.parseLong(studyId)));
+    }
+    @Transactional
+    public void updateComment(StudyCommentUpdateRequestDto request) {
+        Comment comment = commentRepository.findById(request.getCommentId()).orElseThrow(() -> {
+            log.error("존재하지 않는 댓글 입니다. studyId = " + request.getCommentId());
+            return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
+        });
+
+        comment.update(request);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+            log.error("존재하지 않는 댓글 입니다. studyId = " + commentId);
+            return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
+        });
+
+        commentRepository.delete(comment);
     }
 }
