@@ -12,7 +12,7 @@ import lombok.Getter;
 public class StudyDetailResponseDto {
     private Long studyId;
 
-    private MemberInfoResponseDto member;
+    private MemberInfoResponseDto createdMember;
 
     private String title;
 
@@ -24,15 +24,15 @@ public class StudyDetailResponseDto {
 
     private StudyStatus studyStatus; // CURR, COMP, END
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String dateStudyStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateStudyEnd;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String dateStudyEnd;
 
     public StudyDetailResponseDto(Study study) {
         this.studyId = study.getStudyId();
-        this.member = MemberInfoResponseDto.builder().
+        this.createdMember = MemberInfoResponseDto.builder().
                 memberId(study.getMember().getMemberId()).
                 name(study.getMember().getName()).
                 nickname(study.getMember().getNickname()).

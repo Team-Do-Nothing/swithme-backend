@@ -2,19 +2,19 @@ package com.donothing.swithme.repository;
 
 import static com.donothing.swithme.domain.QStudy.study;
 
-import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.QMember;
 import com.donothing.swithme.domain.QStudy;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.study.StudyDetailResponseDto;
 import com.donothing.swithme.dto.study.StudyListResponseDto;
 import com.donothing.swithme.dto.study.StudySearchRequest;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import org.hibernate.criterion.Projection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -45,13 +45,19 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                         qStudy.member.memberId,
                         qStudy.member.as("member")))  // study.member 추가
                 .from(study)
+                .where(titleEq(request.getTitle()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
+//        List<StudyDetailResponseDto> result = studyList.stream().map(StudyDetailResponseDto::new).collect(Collectors.toList());
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
                 .from(study);
 
         return PageableExecutionUtils.getPage(studyList, pageable, countQuery::fetchOne);
+    }
+
+    private BooleanExpression titleEq(String title) {
+        return title != null ? study.title.eq(title) : null;
     }
 }

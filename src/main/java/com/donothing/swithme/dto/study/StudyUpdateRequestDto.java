@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class StudyUpdateReqeustDto {
+public class StudyUpdateRequestDto {
     @NotBlank(message = "제목 값은 필수입니다.")
     private String title;
 

@@ -10,19 +10,19 @@ spring:
   jpa:
     hibernate:
 #    ddl-auto:
-      ddl-auto: create
+      ddl-auto: none
+#      ddl-auto: create
     properties:
       hibernate:
         #        show_sql: true
         format_sql: true
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
   redis:
     host: localhost
     port: 6379
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 logging:
   level:
