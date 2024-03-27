@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/bookmark")
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"북마크 관련 API"})
+@Api(value = "북마크 관련 API")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;

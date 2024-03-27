@@ -51,7 +51,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                 .limit(pageable.getPageSize()) // 한번 조회할 때 몇개까지
                 .fetch();
 
-        List<StudyDetailResponseDto> result = studyList.stream().map(StudyDetailResponseDto::new).collect(Collectors.toList());
+//        List<StudyDetailResponseDto> result = studyList.stream().map(StudyDetailResponseDto::new).collect(Collectors.toList());
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
                 .from(study);
 

@@ -1,9 +1,13 @@
 package com.donothing.swithme.service;
 
+import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.*;
+import com.donothing.swithme.repository.CommentRepository;
 import com.donothing.swithme.repository.StudyRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 public class StudyService {
     private final StudyRepository studyRepository;
 
+    private final CommentRepository commentRepository;
+
     @Transactional
     public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
         Study study = studyRepository.save(request.toEntity());
@@ -28,7 +34,7 @@ public class StudyService {
         return new StudyDetailResponseDto(study);
     }
 
-    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateReqeustDto reuqest) {
+    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateRequestDto reuqest) {
         Study study = validationAndGetStudy(studyId);
         study.update(reuqest);
 
@@ -39,11 +45,28 @@ public class StudyService {
         return studyRepository.searchStudies(condition, pageable);
     }
 
-    public StudyCommentListResponseDto getCommentList(String studyId) {
+    public List<StudyCommentListResponseDto> getCommentList(String studyId) {
         validationAndGetStudy(studyId);
+        List<Comment> allComments = commentRepository.findByStudy_StudyId(Long.valueOf(studyId));
 
-        
-        return null;
+        // 대댓글이 아닌 댓글들을 추출하여 StudyCommentListResponseDto로 매핑
+        List<StudyCommentListResponseDto> comments = allComments.stream()
+                .filter(c -> c.getCommentTag() == null) // 대댓글이 아닌 댓글 필터링
+                .map(StudyCommentListResponseDto::new)
+                .collect(Collectors.toList());
+
+        // 각 댓글에 대해 대댓글 추가
+        for (StudyCommentListResponseDto comment : comments) {
+            List<StudyCommentListResponseDto> recommnet = allComments.stream()
+                    .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
+                    .map(StudyCommentListResponseDto::new)
+                    .collect(Collectors.toList());
+
+            comment.setRecommnet(recommnet);
+        }
+
+        return comments;
+
     }
 
     public Study validationAndGetStudy(String studyId) {
