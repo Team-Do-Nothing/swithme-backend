@@ -33,12 +33,10 @@ public class StudyService {
         Study study = validationAndGetStudy(studyId);
         return new StudyDetailResponseDto(study);
     }
-
-    public StudyDetailResponseDto updateStudy(String studyId, StudyUpdateRequestDto reuqest) {
+    @Transactional
+    public void updateStudy(String studyId, StudyUpdateRequestDto reuqest) {
         Study study = validationAndGetStudy(studyId);
         study.update(reuqest);
-
-        return null;
     }
 
     public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
@@ -66,7 +64,6 @@ public class StudyService {
         }
 
         return comments;
-
     }
 
     public Study validationAndGetStudy(String studyId) {
@@ -74,5 +71,31 @@ public class StudyService {
             log.error("존재하지 않는 스터디 입니다. studyId = " + studyId);
             return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
         });
+    }
+
+    public void comment(String studyId, StudyCommentReqeustDto reuqest) {
+        Study study = validationAndGetStudy(studyId);
+        commentRepository.save(
+                reuqest.toEntity(reuqest.getMemberId(),
+                        Long.parseLong(studyId)));
+    }
+    @Transactional
+    public void updateComment(StudyCommentUpdateRequestDto request) {
+        Comment comment = commentRepository.findById(request.getCommentId()).orElseThrow(() -> {
+            log.error("존재하지 않는 댓글 입니다. studyId = " + request.getCommentId());
+            return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
+        });
+
+        comment.update(request);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+            log.error("존재하지 않는 댓글 입니다. studyId = " + commentId);
+            return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
+        });
+
+        commentRepository.delete(comment);
     }
 }
