@@ -29,11 +29,12 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
     }
 
     @Override
-    public Page<Study> searchStudies(StudySearchRequest request, Pageable pageable) {
+    public Page<StudyDetailResponseDto> searchStudies(StudySearchRequest request, Pageable pageable) {
         QStudy qStudy = new QStudy("study");
-        QMember qMember = new QMember("member");
 
-        List<Study> studyList = queryFactory.select(Projections.fields(Study.class,
+        List<Study> studyList =
+                queryFactory.select(
+                        Projections.fields(Study.class,
                         qStudy.studyId,
                         qStudy.title,
                         qStudy.studyInfo,
@@ -46,15 +47,16 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                         qStudy.member.as("member")))  // study.member 추가
                 .from(study)
                 .where(titleEq(request.getTitle()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset()) // 스킵하고 몇번째부터 시작할건지
+                .limit(pageable.getPageSize()) // 한번 조회할 때 몇개까지
                 .fetch();
 
         List<StudyDetailResponseDto> result = studyList.stream().map(StudyDetailResponseDto::new).collect(Collectors.toList());
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
                 .from(study);
 
-        return PageableExecutionUtils.getPage(studyList, pageable, countQuery::fetchOne);
+        System.out.println(result);
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression titleEq(String title) {

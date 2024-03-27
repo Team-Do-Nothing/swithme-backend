@@ -36,7 +36,7 @@ public class StudyController {
 
     @GetMapping
     @ApiOperation(value = "모든 스터디 조회", notes = "스터디를 조회하는 API 입니다.")
-    public Page<Study> getStudies(StudySearchRequest condition, Pageable pageable) {
+    public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
         return studyService.getStudies(condition, pageable);
     }
 

@@ -1,16 +1,13 @@
 package com.donothing.swithme.service;
 
-import com.donothing.swithme.common.PagingData;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.repository.StudyRepository;
-import java.util.List;
 import java.util.NoSuchElementException;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +35,7 @@ public class StudyService {
         return null;
     }
 
-    public Page<Study> getStudies(StudySearchRequest condition, Pageable pageable) {
+    public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
         return studyRepository.searchStudies(condition, pageable);
     }
 
