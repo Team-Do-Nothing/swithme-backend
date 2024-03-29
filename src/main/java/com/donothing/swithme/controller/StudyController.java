@@ -58,7 +58,7 @@ public class StudyController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/{studyId}")
+    @PostMapping("/join/{studyId}")
     @ApiOperation(value = "해당 스터디 참여 요청", notes = "해당 스터디에 참여요청을 하는 API 입니다.")
     public ResponseEntity<ResponseDto<Void>> updateStudy(@PathVariable String studyId,
                                                          @AuthenticationPrincipal UserDetails user) {
