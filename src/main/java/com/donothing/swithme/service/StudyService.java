@@ -66,12 +66,12 @@ public class StudyService {
 
         // 각 댓글에 대해 대댓글 추가
         for (StudyCommentListResponseDto comment : comments) {
-            List<StudyCommentListResponseDto> recommnet = allComments.stream()
+            List<StudyCommentListResponseDto> recomment = allComments.stream()
                     .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
                     .map(StudyCommentListResponseDto::new)
                     .collect(Collectors.toList());
 
-            comment.setRecommnet(recommnet);
+            comment.setRecomment(recomment);
         }
 
         return comments;
