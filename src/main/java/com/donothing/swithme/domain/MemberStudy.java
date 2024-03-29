@@ -1,5 +1,6 @@
 package com.donothing.swithme.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,11 @@ public class MemberStudy {
     private ApproveStatus approveStatus; // 승인여부 [WAIT, APPROVE, DENY]
 
     private LocalDateTime dateOkay; // 스터디 참여승인일자
+
+    @Builder
+    public MemberStudy(Member member, Study study) {
+        this.member = member;
+        this.study = study;
+        this.approveStatus = ApproveStatus.WAIT;
+    }
 }

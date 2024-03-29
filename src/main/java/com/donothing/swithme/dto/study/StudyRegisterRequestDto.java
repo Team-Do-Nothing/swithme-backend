@@ -7,8 +7,6 @@ import com.donothing.swithme.domain.StudyType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,6 +61,7 @@ public class StudyRegisterRequestDto {
                 .studyType(studyType)
                 .studyStatus(StudyStatus.CURR)
                 .numberOfMembers(numberOfMembers)
+                .remainingNumber(numberOfMembers - 1)
                 .studyInfo(studyInfo)
                 .dateStudyStart(dateStudyStart)
                 .dateStudyEnd(dateStudyEnd)

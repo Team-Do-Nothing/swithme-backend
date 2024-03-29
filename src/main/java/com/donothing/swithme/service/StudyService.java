@@ -1,9 +1,12 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.Comment;
+import com.donothing.swithme.domain.Member;
+import com.donothing.swithme.domain.MemberStudy;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.repository.CommentRepository;
+import com.donothing.swithme.repository.MemberStudyRepository;
 import com.donothing.swithme.repository.StudyRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,9 +26,17 @@ public class StudyService {
 
     private final CommentRepository commentRepository;
 
+    private final MemberStudyRepository memberStudyRepository;
+
     @Transactional
     public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
         Study study = studyRepository.save(request.toEntity());
+
+        memberStudyRepository.save(MemberStudy.builder()
+                        .study(study)
+                        .member(new Member(request.getMemberId()))
+                .build());
+
         return new StudyRegisterResponseDto(study.getStudyId());
     }
 
@@ -97,5 +108,26 @@ public class StudyService {
         });
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public void joinStudy(JoinStudyRequest joinStudyRequest) {
+        Study study = studyRepository.findByIdWithPessimistic(joinStudyRequest.getStudyId()).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + joinStudyRequest.getStudyId());
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+        if (study.getRemainingNumber() <= 0) {
+            throw new IllegalStateException("참여 가능인원수가 "
+                    + study.getRemainingNumber() + "명으로 참여할 수 없는 스터디입니다. ");
+        }
+
+        if (memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(
+                joinStudyRequest.getStudyId(), joinStudyRequest.getMemberId())) {
+            throw new IllegalStateException("이미 참여한 스터디 입니다.");
+        }
+
+        study.decreaseRemainingNumber();
+        memberStudyRepository.save(joinStudyRequest.toEntity());
     }
 }
