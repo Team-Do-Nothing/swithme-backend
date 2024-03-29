@@ -1,11 +1,11 @@
 package com.donothing.swithme;
 
+import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.JoinStudyRequest;
-import com.donothing.swithme.repository.MemberStudyRepository;
-import com.donothing.swithme.repository.StudyRepository;
+import com.donothing.swithme.dto.study.StudyCommentReqeustDto;
+import com.donothing.swithme.repository.CommentRepository;
 import com.donothing.swithme.service.StudyService;
-import jdk.jshell.spi.ExecutionControl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,33 +13,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CommentServiceTest {
-
     @Autowired
     private StudyService studyService;
 
     @Autowired
-    private StudyRepository studyRepository;
+    private CommentRepository commentRepository;
 
     @Test
     public void 댓글달기() {
         // given
-        JoinStudyRequest request = JoinStudyRequest.builder()
-                .studyId(1L)
+        String studyId = "1";
+        StudyCommentReqeustDto request = StudyCommentReqeustDto.builder()
+                .recommentId(null)
+                .comment("댓글 달았지롱")
                 .memberId(1L)
                 .build();
 
         // when
-        studyService.joinStudy(request);
-        Study study = studyRepository.findById(1L).orElseThrow();
+        studyService.comment(studyId, request);
+        Comment comment = commentRepository.findById(1L).orElseThrow();
 
         // then
-        Assert.assertEquals(9, study.getRemainingNumber());
+        Assert.assertEquals("댓글 달았지롱", comment.getComment());
+    }
+
+    @Test
+    public void 대댓글달기() {
+        // given
+        String studyId = "1";
+        StudyCommentReqeustDto request = StudyCommentReqeustDto.builder()
+                .recommentId(1L)
+                .comment("대댓글 달았지롱")
+                .memberId(1L)
+                .build();
+
+        // when
+        studyService.comment(studyId, request);
+        Comment comment = commentRepository.findById(2L).orElseThrow();
+
+        // then
+        Assert.assertEquals("대댓글 달았지롱", comment.getComment());
     }
 }
