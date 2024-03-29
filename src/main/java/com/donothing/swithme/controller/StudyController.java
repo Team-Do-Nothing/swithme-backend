@@ -66,7 +66,7 @@ public class StudyController {
                 .studyId(Long.valueOf(studyId))
                 .memberId(Long.valueOf(user.getUsername()))
                 .build());
-        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 수정 성공",
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 참여요청 성공",
                 null),
                 HttpStatus.OK);
     }
