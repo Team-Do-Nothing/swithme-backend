@@ -1,6 +1,8 @@
 package com.donothing.swithme.service.member;
 
 import com.donothing.swithme.domain.Member;
+import com.donothing.swithme.dto.member.MemberDetailResponseDto;
+import com.donothing.swithme.dto.member.MemberMyDetailResponseDto;
 import com.donothing.swithme.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,10 @@ public class MemberService {
     public Member findByMemberId(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("멤버가 없습니다."));
     }
+
+//    public MemberDetailResponseDto detailMemberByMemberId(Long memberId) {
+//        return memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("멤버가 없습니다."));
+//    }
 
 
 }
