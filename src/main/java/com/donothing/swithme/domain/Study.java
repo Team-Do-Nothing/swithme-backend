@@ -31,6 +31,9 @@ public class Study {
     @Column(nullable = false)
     private int numberOfMembers; // 목표 인원수
 
+    @Column(nullable = false)
+    private int remainingNumber; // 참여 가능한 남은 인원수
+
 //    private regionCode; // 지역코드
 
     @Column(columnDefinition = "TEXT", length = 1000)
@@ -44,12 +47,13 @@ public class Study {
     private String dateStudyEnd;
 
     @Builder
-    public Study(Member member, String title, StudyType studyType, int numberOfMembers, String studyInfo,
+    public Study(Member member, String title, StudyType studyType, int numberOfMembers, int remainingNumber, String studyInfo,
             StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
         this.member = member;
         this.title = title;
         this.studyType = studyType;
         this.numberOfMembers = numberOfMembers;
+        this.remainingNumber = remainingNumber;
         this.studyInfo = studyInfo;
         this.studyStatus = studyStatus;
         this.dateStudyStart = dateStudyStart;
@@ -67,4 +71,8 @@ public class Study {
     }
 
     public Study(Long studyId) { this.studyId = studyId; }
+
+    public void decreaseRemainingNumber() {
+        this.remainingNumber -= 1;
+    }
 }

@@ -1,7 +1,6 @@
 package com.donothing.swithme.domain;
 
 import com.donothing.swithme.dto.study.StudyCommentUpdateRequestDto;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

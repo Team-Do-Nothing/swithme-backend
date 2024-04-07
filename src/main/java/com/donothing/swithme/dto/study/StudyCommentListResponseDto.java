@@ -3,6 +3,8 @@ package com.donothing.swithme.dto.study;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.dto.member.MemberInfoResponseDto;
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +17,14 @@ public class StudyCommentListResponseDto {
     private long commentId;
     private MemberInfoResponseDto memberInfo;
     private String comment;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateCreated;
     private boolean isDeleted;
-    private List<StudyCommentListResponseDto> recommnet;
+    private List<StudyCommentListResponseDto> recomment;
 
     public StudyCommentListResponseDto(Comment comment, List<Comment> allComments) {
-        List<StudyCommentListResponseDto> recommnet = new ArrayList<>(); // 대댓글을 담을 리스트
+        List<StudyCommentListResponseDto> recomment = new ArrayList<>(); // 대댓글을 담을 리스트
+
         this.commentId = comment.getCommentId();
         this.memberInfo = MemberInfoResponseDto.builder().
                 memberId(comment.getMember().getMemberId()).
@@ -30,15 +34,14 @@ public class StudyCommentListResponseDto {
         this.comment = comment.getComment();
         this.dateCreated = comment.getDateCreated();
         this.commentId = comment.getCommentId();
-        this.commentId = comment.getCommentId();
 
         for (Comment c : allComments) {
             if (c.getCommentTag().equals(comment.getCommentId())) {
-                recommnet.add(new StudyCommentListResponseDto(c));
+                recomment.add(new StudyCommentListResponseDto(c));
             }
         }
 
-        this.recommnet = recommnet;
+        this.recomment = recomment;
     }
 
     public StudyCommentListResponseDto(Comment comment) {
@@ -50,7 +53,6 @@ public class StudyCommentListResponseDto {
                 build();
         this.comment = comment.getComment();
         this.dateCreated = comment.getDateCreated();
-        this.commentId = comment.getCommentId();
         this.commentId = comment.getCommentId();
     }
 }

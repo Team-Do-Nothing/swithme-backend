@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,14 +19,16 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/bookmark")
 @RestController
 @RequiredArgsConstructor
-@Api(value = "북마크 관련 API")
+@Api(tags = {"북마크 관련 API"})
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
     @PostMapping
     @ApiOperation(value = "북마크 등록", notes = "북마크를 등록하는 API 입니다.")
     public ResponseEntity<ResponseDto<BookmarkRegisterResponseDto>> registerBookmark(@RequestBody @Valid
-                                                                                  BookmarkRegisterRequestDto request) {
+                                                                                        BookmarkRegisterRequestDto request,
+                                                                                     @AuthenticationPrincipal UserDetails user) {
+        request.setMemberId(Long.valueOf(user.getUsername()));
         return new ResponseEntity<>(new ResponseDto<>(201, "북마크 등록 성공",
                 bookmarkService.registerBookmark(request)),
                 HttpStatus.CREATED);

@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    # 각자 PC에 만들어둔 DB 이름을 3306/( )?에 넣어 사용
+    url: jdbc:mysql://localhost:3306/swithme
+    # mysql에 생성한 사용자 계정 정보 사용
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      #    ddl-auto:
+      ddl-auto: none
+    #      ddl-auto: create
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+
+  redis:
+    host: localhost
+    port: 6379
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+jwt:
+  secret-key: 202307teamDoNothingSwithmeLetsGooooOOoMSCUK202403Wppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+
