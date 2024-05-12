@@ -1,9 +1,7 @@
 package com.donothing.swithme.controller;
 
 import com.donothing.swithme.domain.Member;
-import com.donothing.swithme.dto.member.MemberDetailResponseDto;
-import com.donothing.swithme.dto.member.MemberMyDetailResponseDto;
-import com.donothing.swithme.dto.member.MemberUpdateDto;
+import com.donothing.swithme.dto.member.*;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.service.member.MemberService;
 import com.donothing.swithme.util.SecurityUtil;
@@ -15,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RequestMapping("/api/v1/member")
@@ -63,11 +62,13 @@ public class MemberController {
                 HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "멤버 전체 회원프로필 조회", notes = "사용자가 다른 회원들의 프로필을 전체 조회하는 API입니다.")
-//    @GetMapping("/list/page")
-//    public ResponseEntity<?> getMembers(String friend) {
-//
-//    }
+    @ApiOperation(value = "스터디 내 멤버 전체 조회", notes = "사용자가 스터디 내 회원을 전체 조회하는 API입니다.")
+    @GetMapping("/{studyId}/list")
+    public ResponseEntity<ResponseDto<List<MemberListResponseDto>>> getMembers(@PathVariable String studyId) {
+        return new ResponseEntity<>(new ResponseDto<>(200, "해당 스터디 내 회원 목록 조회 성공",
+                memberService.getMembers(studyId)), HttpStatus.OK);
+
+    }
 
     @ApiOperation(value = "회원 프로필 수정")
     @PutMapping("/")
