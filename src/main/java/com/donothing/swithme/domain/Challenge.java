@@ -1,5 +1,6 @@
 package com.donothing.swithme.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,10 +26,10 @@ public class Challenge extends BaseTimeEntity {
     private String goal;
 
     @Column(nullable = false)
-    private LocalDate startDate;
+    private String startDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;
+    private String endDate;
 
     @Column(nullable = false)
     private int challengeFee;
@@ -42,4 +43,20 @@ public class Challenge extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int challengeFeeAll;
+
+    @Builder
+    public Challenge(String title, String goal, String startDate, String endDate,
+            int challengeFee, String checkFormat, ChallengeStatus challengeStatus) {
+        this.title = title;
+        this.goal = goal;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.challengeFee = challengeFee;
+        this.checkFormat = checkFormat;
+        this.challengeStatus = challengeStatus;
+    }
+
+    public Challenge(Long challengeId) {
+        this.challengeId = challengeId;
+    }
 }
