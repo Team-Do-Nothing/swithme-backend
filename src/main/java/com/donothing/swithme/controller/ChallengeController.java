@@ -1,5 +1,6 @@
 package com.donothing.swithme.controller;
 
+import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
 import com.donothing.swithme.dto.response.ResponseDto;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +37,14 @@ public class ChallengeController {
         return new ResponseEntity<>(new ResponseDto<>(201, "북마크 등록 성공",
                 challengeService.registChallenge(request)),
                 HttpStatus.CREATED);
-
     }
 
+    @GetMapping("/{challengeId}")
+    @ApiOperation(value = "챌린지 조회하기", notes = "챌린지를 조회하는 API 입니다.")
+    public ResponseEntity<ResponseDto<ChallengeDetailResponseDto>> getDetailChallenge(@RequestBody @Valid
+    @PathVariable String challengeId) {
+        return new ResponseEntity<>(new ResponseDto<>(200, "스터디 조회 성공",
+                challengeService.detailChallengeByChallengeId(challengeId)),
+                HttpStatus.OK);
+    }
 }

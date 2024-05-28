@@ -2,6 +2,7 @@ package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
 import com.donothing.swithme.repository.ChallengeRepository;
@@ -50,5 +51,14 @@ public class ChallengeService {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    public ChallengeDetailResponseDto detailChallengeByChallengeId(String challengeId) {
+        Challenge challenge = challengeRepository.findById(Long.parseLong(challengeId)).orElseThrow(() -> {
+            log.error("존재하지 않는 챌린지 입니다. challengeId = " + challengeId);
+            return new NoSuchElementException("존재하지 않는 챌린지 입니다. ");
+        });
+
+        return new ChallengeDetailResponseDto(challenge);
     }
 }
