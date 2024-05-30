@@ -34,16 +34,15 @@ public class ChallengeController {
     ChallengeRegisterRequestDto request,
             @AuthenticationPrincipal UserDetails user) {
         request.setMemberId(Long.valueOf(user.getUsername()));
-        return new ResponseEntity<>(new ResponseDto<>(201, "북마크 등록 성공",
+        return new ResponseEntity<>(new ResponseDto<>(201, "챌린지 생성 성공",
                 challengeService.registChallenge(request)),
                 HttpStatus.CREATED);
     }
 
     @GetMapping("/{challengeId}")
     @ApiOperation(value = "챌린지 조회하기", notes = "챌린지를 조회하는 API 입니다.")
-    public ResponseEntity<ResponseDto<ChallengeDetailResponseDto>> getDetailChallenge(@RequestBody @Valid
-    @PathVariable String challengeId) {
-        return new ResponseEntity<>(new ResponseDto<>(200, "스터디 조회 성공",
+    public ResponseEntity<ResponseDto<ChallengeDetailResponseDto>> getDetailChallenge(@PathVariable String challengeId) {
+        return new ResponseEntity<>(new ResponseDto<>(200, "챌린지 조회 성공",
                 challengeService.detailChallengeByChallengeId(challengeId)),
                 HttpStatus.OK);
     }

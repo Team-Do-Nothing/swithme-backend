@@ -33,7 +33,9 @@ public class ChallengeService {
         if (request.getMemberId() != (study.getMember().getMemberId()))
              throw new IllegalStateException("스터디 방장만 챌린지를 개설할 수 있습니다. ");
 
-        validationDate(request.getStartDate());
+        if (!validationDate(request.getStartDate())) {
+            throw new IllegalStateException("오늘 날짜 이후로 챌린지를 개설해야합니다.");
+        }
 
         Challenge challenge = challengeRepository.save(request.toEntity());
         memberChallengeRepository.save(request.toMemberChallenge(challenge.getChallengeId()));
