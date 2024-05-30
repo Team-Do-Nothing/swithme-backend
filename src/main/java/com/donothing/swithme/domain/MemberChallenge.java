@@ -1,5 +1,6 @@
 package com.donothing.swithme.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,10 @@ public class MemberChallenge extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
+
+    @Builder
+    public MemberChallenge(Challenge challenge, Member member) {
+        this.challenge = challenge;
+        this.member = member;
+    }
 }
