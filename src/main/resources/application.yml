@@ -30,3 +30,15 @@ logging:
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_BUCKET}
