@@ -24,7 +24,7 @@ public class ChallengeService {
     private final MemberChallengeRepository memberChallengeRepository;
     private final StudyRepository studyRepository;
 
-    public ChallengeRegisterResponseDto registChallenge(ChallengeRegisterRequestDto request) {
+    public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
         Study study = studyRepository.findById(request.getStudyId()).orElseThrow(() -> {
             log.error("존재하지 않는 스터디 입니다. studyId = " + request.getStudyId());
             return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
@@ -34,7 +34,7 @@ public class ChallengeService {
              throw new IllegalStateException("스터디 방장만 챌린지를 개설할 수 있습니다. ");
 
         if (!validationDate(request.getStartDate())) {
-            throw new IllegalStateException("오늘 날짜 이후로 챌린지를 개설해야합니다.");
+            throw new IllegalStateException("오늘 날짜 이후로 챌린지를 개설해야 합니다.");
         }
 
         Challenge challenge = challengeRepository.save(request.toEntity());
@@ -58,7 +58,7 @@ public class ChallengeService {
     public ChallengeDetailResponseDto detailChallengeByChallengeId(String challengeId) {
         Challenge challenge = challengeRepository.findById(Long.parseLong(challengeId)).orElseThrow(() -> {
             log.error("존재하지 않는 챌린지 입니다. challengeId = " + challengeId);
-            return new NoSuchElementException("존재하지 않는 챌린지 입니다. ");
+            return new NoSuchElementException("존재하지 않는 챌린지 입니다.");
         });
 
         return new ChallengeDetailResponseDto(challenge);

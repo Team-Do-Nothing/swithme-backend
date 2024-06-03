@@ -34,7 +34,7 @@ public class ChallengeServiceTest {
                 .build();
 
         // when
-        ChallengeRegisterResponseDto response = challengeService.registChallenge(request);
+        ChallengeRegisterResponseDto response = challengeService.registerChallenge(request);
 
         // then
         Assert.assertEquals(Optional.of(1L), response.getChallengeId());
