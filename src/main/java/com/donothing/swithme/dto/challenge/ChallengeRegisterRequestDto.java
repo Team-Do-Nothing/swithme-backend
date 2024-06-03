@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChallengeRegisterRequestDto {
     @NotNull(message = "스터디 아이디는 필수입니다.")
     @ApiModelProperty(value = "스터디 아이디", example = "1", required = true)
