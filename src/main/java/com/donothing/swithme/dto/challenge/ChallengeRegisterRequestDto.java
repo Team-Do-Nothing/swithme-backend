@@ -38,12 +38,12 @@ public class ChallengeRegisterRequestDto {
 
     @NotNull(message = "챌린지 시작날짜는 필수입니다.")
     @Pattern(regexp = "^\\d{8}$", message="챌린지 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "챌린지 시작날짜", required = true)
+    @ApiModelProperty(value = "챌린지 시작날짜", required = true, example = "yyyyMMdd")
     private String startDate;
 
     @NotNull(message = "챌린지 종료날짜는 필수입니다.")
     @Pattern(regexp = "^\\d{8}$", message="챌린지 종료일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "챌린지 종료날짜", required = true)
+    @ApiModelProperty(value = "챌린지 종료날짜", required = true, example = "yyyyMMdd")
     private String endDate;
 
     @NotNull(message = "챌린지 참가금액은 필수입니다.")
