@@ -4,6 +4,7 @@ import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.ChallengeStatus;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.MemberChallenge;
+import com.donothing.swithme.domain.Study;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -67,6 +68,7 @@ public class ChallengeRegisterRequestDto {
                 .challengeFee(challengeFee)
                 .checkFormat(checkFormat)
                 .challengeStatus(challengeStatus)
+                .study(new Study(studyId))
                 .build();
     }
 

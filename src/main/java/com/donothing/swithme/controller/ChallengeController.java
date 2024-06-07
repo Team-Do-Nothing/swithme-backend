@@ -49,7 +49,7 @@ public class ChallengeController {
                 HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/join")
     @ApiOperation(value = "챌린지 참여하기", notes = "챌린지에 참여할 수 있는 API 입니다.")
     public ResponseEntity<ResponseDto<Void>> joinChallenge(@RequestBody @Valid
     JoinChallengeRequestDto request,

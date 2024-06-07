@@ -79,7 +79,7 @@ public class ChallengeService {
         }
 
         // MemberChallenge 조회 해서 memberId 있는지 체크
-        if(memberChallengeRepository.existsByStudy_StudyIdAndMember_MemberId(challenge.getStudy().getStudyId(),
+        if(memberChallengeRepository.existsByChallenge_ChallengeIdAndMember_MemberId(challenge.getChallengeId(),
                 request.getMemberId())) {
             log.error("이미 참여하고 있는 유저입니다.");
             throw new IllegalStateException("이미 참여하고 있는 유저입니다.");

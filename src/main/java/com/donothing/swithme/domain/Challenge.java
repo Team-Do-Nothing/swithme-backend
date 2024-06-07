@@ -46,7 +46,7 @@ public class Challenge extends BaseTimeEntity {
 
     @Builder
     public Challenge(String title, String goal, String startDate, String endDate,
-            int challengeFee, String checkFormat, ChallengeStatus challengeStatus) {
+            int challengeFee, String checkFormat, ChallengeStatus challengeStatus, Study study) {
         this.title = title;
         this.goal = goal;
         this.startDate = startDate;
@@ -54,6 +54,7 @@ public class Challenge extends BaseTimeEntity {
         this.challengeFee = challengeFee;
         this.checkFormat = checkFormat;
         this.challengeStatus = challengeStatus;
+        this.study = study;
     }
 
     public Challenge(Long challengeId) {
