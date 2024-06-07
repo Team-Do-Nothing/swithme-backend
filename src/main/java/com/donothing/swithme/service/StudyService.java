@@ -1,10 +1,13 @@
 package com.donothing.swithme.service;
 
+import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.MemberStudy;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.study.*;
+import com.donothing.swithme.repository.ChallengeRepository;
 import com.donothing.swithme.repository.CommentRepository;
 import com.donothing.swithme.repository.MemberStudyRepository;
 import com.donothing.swithme.repository.StudyRepository;
@@ -27,6 +30,8 @@ public class StudyService {
     private final CommentRepository commentRepository;
 
     private final MemberStudyRepository memberStudyRepository;
+
+    private final ChallengeRepository challengeRepository;
 
     @Transactional
     public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
@@ -129,5 +134,11 @@ public class StudyService {
 
         study.decreaseRemainingNumber();
         memberStudyRepository.save(joinStudyRequest.toEntity());
+    }
+
+    public List<ChallengeDetailResponseDto> challengesByStudyId(String studyId) {
+        List<Challenge> challenges = challengeRepository.findByStudy_StudyId(Long.parseLong(studyId));
+
+        return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.donothing.swithme.controller;
 
+import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.service.StudyService;
@@ -38,6 +39,14 @@ public class StudyController {
     @ApiOperation(value = "모든 스터디 조회", notes = "스터디를 조회하는 API 입니다.")
     public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
         return studyService.getStudies(condition, pageable);
+    }
+
+    @GetMapping("/challenge/{studyId}")
+    @ApiOperation(value = "스터디 내 챌린지 조회", notes = "스터디 내 챌린지를 조회하는 API 입니다.")
+    public ResponseEntity<ResponseDto<List<ChallengeDetailResponseDto>>> challengesByStudyId(@PathVariable String studyId) {
+        return new ResponseEntity<>(new ResponseDto<>(200, "스터디 내 챌린지를 조회 성공",
+                studyService.challengesByStudyId(studyId)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{studyId}")
