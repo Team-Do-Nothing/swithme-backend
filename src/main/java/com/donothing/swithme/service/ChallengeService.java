@@ -1,16 +1,21 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.Challenge;
+import com.donothing.swithme.domain.MemberChallenge;
+import com.donothing.swithme.domain.MemberStudy;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.JoinChallengeRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
 import com.donothing.swithme.repository.ChallengeRepository;
 import com.donothing.swithme.repository.MemberChallengeRepository;
+import com.donothing.swithme.repository.MemberStudyRepository;
 import com.donothing.swithme.repository.StudyRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,8 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final MemberChallengeRepository memberChallengeRepository;
     private final StudyRepository studyRepository;
+
+    private final MemberStudyRepository memberStudyRepository;
 
     public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
         Study study = studyRepository.findById(request.getStudyId()).orElseThrow(() -> {
@@ -56,11 +63,36 @@ public class ChallengeService {
     }
 
     public ChallengeDetailResponseDto detailChallengeByChallengeId(String challengeId) {
-        Challenge challenge = challengeRepository.findById(Long.parseLong(challengeId)).orElseThrow(() -> {
+        Challenge challenge = validateChallenge(Long.parseLong(challengeId));
+
+        return new ChallengeDetailResponseDto(challenge);
+    }
+
+    public void joinChallenge(JoinChallengeRequestDto request) {
+        Challenge challenge = validateChallenge(request.getChallengeId());
+
+        // 스터디원인지 체크
+        if (!memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(challenge.getStudy().getStudyId(),
+                request.getMemberId())) {
+            log.error("스터디에 참가한 유저만 챌린지에 참여할 수 있습니다.");
+            throw new IllegalStateException("스터디에 참가한 유저만 챌린지에 참여할 수 있습니다.");
+        }
+
+        // MemberChallenge 조회 해서 memberId 있는지 체크
+        if(memberChallengeRepository.existsByChallenge_ChallengeIdAndMember_MemberId(challenge.getChallengeId(),
+                request.getMemberId())) {
+            log.error("이미 참여하고 있는 유저입니다.");
+            throw new IllegalStateException("이미 참여하고 있는 유저입니다.");
+        }
+
+
+        memberChallengeRepository.save(request.toMemberChallenge());
+    }
+
+    public Challenge validateChallenge(Long challengeId) {
+        return challengeRepository.findById(challengeId).orElseThrow(() -> {
             log.error("존재하지 않는 챌린지 입니다. challengeId = " + challengeId);
             return new NoSuchElementException("존재하지 않는 챌린지 입니다.");
         });
-
-        return new ChallengeDetailResponseDto(challenge);
     }
 }

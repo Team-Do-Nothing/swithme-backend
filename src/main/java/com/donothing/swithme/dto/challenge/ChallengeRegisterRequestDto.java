@@ -4,6 +4,7 @@ import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.ChallengeStatus;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.MemberChallenge;
+import com.donothing.swithme.domain.Study;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -37,12 +38,12 @@ public class ChallengeRegisterRequestDto {
 
     @NotNull(message = "챌린지 시작날짜는 필수입니다.")
     @Pattern(regexp = "^\\d{8}$", message="챌린지 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "챌린지 시작날짜", required = true)
+    @ApiModelProperty(value = "챌린지 시작날짜", required = true, example = "yyyyMMdd")
     private String startDate;
 
     @NotNull(message = "챌린지 종료날짜는 필수입니다.")
     @Pattern(regexp = "^\\d{8}$", message="챌린지 종료일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "챌린지 종료날짜", required = true)
+    @ApiModelProperty(value = "챌린지 종료날짜", required = true, example = "yyyyMMdd")
     private String endDate;
 
     @NotNull(message = "챌린지 참가금액은 필수입니다.")
@@ -67,6 +68,7 @@ public class ChallengeRegisterRequestDto {
                 .challengeFee(challengeFee)
                 .checkFormat(checkFormat)
                 .challengeStatus(challengeStatus)
+                .study(new Study(studyId))
                 .build();
     }
 
