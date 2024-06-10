@@ -1,6 +1,7 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.Challenge;
+import com.donothing.swithme.domain.MemberChallenge;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
@@ -11,7 +12,9 @@ import com.donothing.swithme.repository.StudyRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -62,5 +65,10 @@ public class ChallengeService {
         });
 
         return new ChallengeDetailResponseDto(challenge);
+    }
+
+    public List<ChallengeDetailResponseDto> getMyChallenge(String username, String studyId) {
+        List<MemberChallenge> challenges = memberChallengeRepository.fetchJoin(Long.parseLong(username), Long.parseLong(studyId));
+        return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
     }
 }
