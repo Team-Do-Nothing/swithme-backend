@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -94,5 +95,10 @@ public class ChallengeService {
             log.error("존재하지 않는 챌린지 입니다. challengeId = " + challengeId);
             return new NoSuchElementException("존재하지 않는 챌린지 입니다.");
         });
+    }
+
+    public List<ChallengeDetailResponseDto> getMyChallenge(String username, String studyId) {
+        List<MemberChallenge> challenges = memberChallengeRepository.fetchJoin(Long.parseLong(username), Long.parseLong(studyId));
+        return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
     }
 }

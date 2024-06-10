@@ -2,6 +2,7 @@ package com.donothing.swithme.dto.challenge;
 
 import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.ChallengeStatus;
+import com.donothing.swithme.domain.MemberChallenge;
 import com.donothing.swithme.dto.member.MemberInfoResponseDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -10,9 +11,6 @@ import lombok.Getter;
 public class ChallengeDetailResponseDto {
     @ApiModelProperty(value = "챌린지 아이디", example = "1")
     private final long challengeId;
-
-    @ApiModelProperty(value = "챌린지 생성자")
-    private final MemberInfoResponseDto createdMember;
 
     @ApiModelProperty(value = "스터디 제목")
     private final String title;
@@ -39,11 +37,6 @@ public class ChallengeDetailResponseDto {
     private final int challengeFeeAll;
 
     public ChallengeDetailResponseDto(Challenge challenge) {
-        this.createdMember = MemberInfoResponseDto.builder().
-                memberId(challenge.getStudy().getMember().getMemberId()).
-                name(challenge.getStudy().getMember().getName()).
-                nickname(challenge.getStudy().getMember().getNickname()).
-                build();
         this.challengeId = challenge.getChallengeId();
         this.title = challenge.getTitle();
         this.goal = challenge.getGoal();
@@ -53,5 +46,17 @@ public class ChallengeDetailResponseDto {
         this.checkFormat = challenge.getCheckFormat();
         this.challengeStatus = challenge.getChallengeStatus();
         this.challengeFeeAll = challenge.getChallengeFeeAll();
+    }
+
+    public ChallengeDetailResponseDto(MemberChallenge memberChallenge) {
+        this.challengeId = memberChallenge.getChallenge().getChallengeId();
+        this.title = memberChallenge.getChallenge().getTitle();
+        this.goal = memberChallenge.getChallenge().getGoal();
+        this.startDate = memberChallenge.getChallenge().getStartDate();
+        this.endDate = memberChallenge.getChallenge().getEndDate();
+        this.challengeFee = memberChallenge.getChallenge().getChallengeFee();
+        this.checkFormat = memberChallenge.getChallenge().getCheckFormat();
+        this.challengeStatus = memberChallenge.getChallenge().getChallengeStatus();
+        this.challengeFeeAll = memberChallenge.getChallenge().getChallengeFeeAll();
     }
 }
