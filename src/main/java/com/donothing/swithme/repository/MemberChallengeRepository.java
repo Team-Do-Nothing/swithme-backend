@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberChallengeRepository extends JpaRepository<MemberChallenge, Long> {
 
-//    List<MemberChallenge> findByMember_MemberId(long username);
-
     @Query("select mc from MemberChallenge mc"
             + "         join fetch mc.challenge ch"
             + "         join fetch mc.member m"
@@ -18,5 +16,7 @@ public interface MemberChallengeRepository extends JpaRepository<MemberChallenge
             + "         and ch.study.studyId = :studyId"
             + "         ")
     List<MemberChallenge> fetchJoin(@Param("memberId") long memberId, @Param("studyId") long studyId);
+
+    boolean existsByChallenge_ChallengeIdAndMember_MemberId(Long studyId, Long memberId);
 }
 

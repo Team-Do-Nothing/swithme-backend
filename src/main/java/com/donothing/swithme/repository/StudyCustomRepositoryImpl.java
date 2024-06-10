@@ -41,6 +41,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                         qStudy.studyStatus,
                         qStudy.studyType,
                         qStudy.numberOfMembers,
+                        qStudy.remainingNumber,
                         qStudy.dateStudyStart,
                         qStudy.dateStudyEnd,
                         qStudy.member.memberId,
