@@ -4,8 +4,10 @@ import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.Study;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +15,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudyCommentReqeustDto {
 
     @ApiModelProperty(value = "대댓글 작성 시 원 댓글 아이디, 본댓글이면 null로 셋팅", example = "1")
