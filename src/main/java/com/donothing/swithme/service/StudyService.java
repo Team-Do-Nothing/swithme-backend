@@ -142,6 +142,7 @@ public class StudyService {
         return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public void endStudy(String studyId) {
         Study study = validationAndGetStudy(studyId);
 
