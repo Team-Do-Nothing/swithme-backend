@@ -75,4 +75,8 @@ public class Study {
     public void decreaseRemainingNumber() {
         this.remainingNumber -= 1;
     }
+
+    public void endStudy() {
+        this.studyStatus = StudyStatus.END;
+    }
 }

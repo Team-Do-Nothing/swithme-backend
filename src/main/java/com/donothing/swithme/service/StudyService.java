@@ -141,4 +141,13 @@ public class StudyService {
 
         return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
     }
+
+    public void endStudy(String studyId) {
+        Study study = validationAndGetStudy(studyId);
+
+        if (!challengesByStudyId(studyId).isEmpty())
+            throw new IllegalStateException("챌린지가 존재하지 않아야 스터디 조기종료가 가능합니다.");
+
+        study.endStudy();
+    }
 }
