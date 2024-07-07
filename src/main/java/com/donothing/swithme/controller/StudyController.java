@@ -80,6 +80,16 @@ public class StudyController {
                 HttpStatus.OK);
     }
 
+    @PostMapping("/end/{studyId}")
+    @ApiOperation(value = "해당 스터디 조기 종료", notes = "해당 스터디를 조기종료 하는 API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> endStudy(@PathVariable String studyId,
+            @AuthenticationPrincipal UserDetails user) {
+        studyService.endStudy(studyId);
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 종료 성공",
+                null),
+                HttpStatus.OK);
+    }
+
     @GetMapping("/comment/{studyId}")
     @ApiOperation(value = "해당 스터디 댓글 조회", notes = "해당 스터디의 댓글을 조회하는 API 입니다.")
     public ResponseEntity<ResponseDto<List<StudyCommentListResponseDto>>> getCommentList(@PathVariable String studyId) {

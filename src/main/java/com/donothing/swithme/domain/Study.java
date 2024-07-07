@@ -39,6 +39,7 @@ public class Study {
     @Column(columnDefinition = "TEXT", length = 1000)
     private String studyInfo;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StudyStatus studyStatus; // CURR, COMP, END
 
@@ -74,5 +75,9 @@ public class Study {
 
     public void decreaseRemainingNumber() {
         this.remainingNumber -= 1;
+    }
+
+    public void endStudy() {
+        this.studyStatus = StudyStatus.END;
     }
 }
