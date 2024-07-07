@@ -4,16 +4,17 @@ import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.domain.StudyType;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class StudyUpdateRequestDto {
     @NotNull(message = "제목 값은 필수입니다.")
     private String title;
