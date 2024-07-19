@@ -13,12 +13,14 @@ import lombok.Getter;
 public class StudyDetailResponseDto {
     @ApiModelProperty(value = "스터디 아이디")
     private Long studyId;
-    
+
     @ApiModelProperty(value = "스터디 생성자")
     private MemberInfoResponseDto createdMember;
 
     @ApiModelProperty(value = "스터디 제목")
     private String title;
+
+    private boolean isBookmarked = false;
 
     @ApiModelProperty(value = "스터디 타입")
     private StudyType studyType; // ONLINE, OFFLINE
@@ -50,6 +52,24 @@ public class StudyDetailResponseDto {
                 name(study.getMember().getName()).
                 nickname(study.getMember().getNickname()).
                 build();
+        this.title = study.getTitle();
+        this.studyType = study.getStudyType();
+        this.numberOfMembers = study.getNumberOfMembers();
+        this.remainingNumber = study.getRemainingNumber();
+        this.studyInfo = study.getStudyInfo();
+        this.studyStatus = study.getStudyStatus();
+        this.dateStudyStart = study.getDateStudyStart();
+        this.dateStudyEnd = study.getDateStudyEnd();
+    }
+
+    public StudyDetailResponseDto(Study study, boolean isBookmarked) {
+        this.studyId = study.getStudyId();
+        this.createdMember = MemberInfoResponseDto.builder().
+                memberId(study.getMember().getMemberId()).
+                name(study.getMember().getName()).
+                nickname(study.getMember().getNickname()).
+                build();
+        this.isBookmarked = isBookmarked;
         this.title = study.getTitle();
         this.studyType = study.getStudyType();
         this.numberOfMembers = study.getNumberOfMembers();
