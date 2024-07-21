@@ -151,4 +151,16 @@ public class StudyService {
 
         study.endStudy();
     }
+
+    @Transactional
+    public void deleteStudy(String studyId, Long loginId) {
+        Study study = validationAndGetStudy(studyId);
+
+        if (loginId != (study.getMember().getMemberId()))
+            throw new IllegalStateException("스터디 방장만 스터디를 삭제할 수 있습니다. ");
+
+        List<MemberStudy> memberStudy = memberStudyRepository.findByStudy_StudyId(Long.parseLong(studyId));
+        memberStudyRepository.deleteAll(memberStudy);
+        studyRepository.delete(study);
+    }
 }

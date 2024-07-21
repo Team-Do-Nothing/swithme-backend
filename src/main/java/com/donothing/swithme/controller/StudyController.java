@@ -67,6 +67,15 @@ public class StudyController {
                 HttpStatus.OK);
     }
 
+    @DeleteMapping("/{studyId}")
+    @ApiOperation(value = "해당 스터디 삭제", notes = "해당 스터디의 정보를 삭제하는 API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> deleteStudy(@PathVariable String studyId, @AuthenticationPrincipal UserDetails user) {
+        studyService.deleteStudy(studyId, Long.valueOf(user.getUsername()));
+        return new ResponseEntity<>(new ResponseDto<>(204, "스터디 삭제 성공",
+                null),
+                HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("/join/{studyId}")
     @ApiOperation(value = "해당 스터디 참여 요청", notes = "해당 스터디에 참여요청을 하는 API 입니다.")
     public ResponseEntity<ResponseDto<Void>> updateStudy(@PathVariable String studyId,
