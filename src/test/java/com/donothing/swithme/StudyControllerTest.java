@@ -1,7 +1,9 @@
 package com.donothing.swithme;
 
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.domain.StudyType;
 import com.donothing.swithme.dto.study.JoinStudyRequest;
+import com.donothing.swithme.dto.study.StudyRegisterRequestDto;
 import com.donothing.swithme.repository.MemberStudyRepository;
 import com.donothing.swithme.repository.StudyRepository;
 import com.donothing.swithme.service.StudyService;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.CountDownLatch;
@@ -20,6 +23,10 @@ import java.util.concurrent.Executors;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@TestPropertySource(properties = {
+        "cloud.aws.credentials.access-key=test-access-key",
+        "cloud.aws.credentials.secret-key=test-secret-key"
+})
 public class StudyControllerTest {
 
     @Autowired
@@ -88,7 +95,7 @@ public class StudyControllerTest {
             studyService.joinStudy(request);
         });
     }
-    
+
     @Test
     public void 스터디에_참여하지않은사람은_true() {
         // given
@@ -114,4 +121,26 @@ public class StudyControllerTest {
         // then
         Assert.assertFalse(result);
     }
+//
+//    @Test
+//    public void 스터디_생성() {
+//        // given
+//        StudyRegisterRequestDto given = StudyRegisterRequestDto.builder()
+//                .title("자바 스터디 모집합니다. ")
+//                .categoryId(1L)
+//                .dateStudyStart("2024-07-01")
+//                .dateStudyEnd("2024-07-31")
+//                .regionCode("1")
+//                .studyInfo("취준생들 환영합니다 자바 기초부터 같이 공부해요!")
+//                .studyType(StudyType.OFFLINE)
+//                .numberOfMembers(10)
+//                .memberId(1L)
+//                .build();
+//
+//        // when
+//        studyService.registerStudy(given);
+//
+//        // then
+//        Assert.assertEquals("자바 스터디 모집합니다. ", studyRepository.findById(1L).get().getTitle());
+//    }
 }

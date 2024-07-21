@@ -8,6 +8,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class StudyRegisterRequestDto {
     @NotNull(message = "카테고리 아이디는 필수입니다.")
     @ApiModelProperty(value = "카테고리 아이디", example = "1", required = true)
@@ -45,13 +49,13 @@ public class StudyRegisterRequestDto {
     private String studyInfo;
 
     @NotNull(message = "스터디 시작날짜는 필수입니다.")
-    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "스터디 시작날짜", required = true)
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message="스터디 시작일은 yyyy-MM-dd 형식의 날짜로 입력해주세요.")
+    @ApiModelProperty(value = "스터디 시작날짜", required = true, example = "2024-07-01")
     private String dateStudyStart;
 
     @NotNull(message = "스터디 마감날짜는 필수입니다.")
-    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "스터디 마감날짜", required = true)
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message="스터디 시작일은 yyyy-MM-dd 형식의 날짜로 입력해주세요.")
+    @ApiModelProperty(value = "스터디 마감날짜", required = true,  example = "2024-07-01")
     private String dateStudyEnd;
 
     public Study toEntity() {
