@@ -37,7 +37,8 @@ public class StudyController {
 
     @GetMapping
     @ApiOperation(value = "모든 스터디 조회", notes = "스터디를 조회하는 API 입니다.")
-    public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
+    public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable, @AuthenticationPrincipal UserDetails user) {
+        if (user != null) condition.setMemberId(Long.valueOf(user.getUsername()));
         return studyService.getStudies(condition, pageable);
     }
 
