@@ -9,4 +9,6 @@ public interface MemberStudyRepository extends JpaRepository<MemberStudy, Long> 
     boolean existsByStudy_StudyIdAndMember_MemberId(Long studyId, Long memberId);
 
     List<MemberStudy> findByStudy_StudyId(Long studyId);
+
+    MemberStudy findMemberStudyByStudy_StudyIdAndMember_MemberId(Long studyId, Long memberId);
 }

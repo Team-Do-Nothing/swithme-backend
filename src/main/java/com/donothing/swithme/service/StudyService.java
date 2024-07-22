@@ -1,5 +1,6 @@
 package com.donothing.swithme.service;
 
+import com.donothing.swithme.domain.ApproveStatus;
 import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Member;
@@ -40,6 +41,7 @@ public class StudyService {
         memberStudyRepository.save(MemberStudy.builder()
                         .study(study)
                         .member(new Member(request.getMemberId()))
+                        .approveStatus(ApproveStatus.APPROVE)
                 .build());
 
         return new StudyRegisterResponseDto(study.getStudyId());
@@ -50,9 +52,9 @@ public class StudyService {
         return new StudyDetailResponseDto(study);
     }
     @Transactional
-    public void updateStudy(String studyId, StudyUpdateRequestDto reuqest) {
+    public void updateStudy(String studyId, StudyUpdateRequestDto request) {
         Study study = validationAndGetStudy(studyId);
-        study.update(reuqest);
+        study.update(request);
     }
 
     public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
@@ -132,8 +134,7 @@ public class StudyService {
             throw new IllegalStateException("이미 참여한 스터디 입니다.");
         }
 
-        study.decreaseRemainingNumber();
-        memberStudyRepository.save(joinStudyRequest.toEntity());
+        memberStudyRepository.save(joinStudyRequest.toEntity(ApproveStatus.WAIT));
     }
 
     public List<ChallengeDetailResponseDto> challengesByStudyId(String studyId) {
@@ -150,5 +151,50 @@ public class StudyService {
             throw new IllegalStateException("챌린지가 존재하지 않아야 스터디 조기종료가 가능합니다.");
 
         study.endStudy();
+    }
+
+    @Transactional
+    public void approveJoinStudy(JoinStudyRequest approveJoinStudyRequest) {
+        Study study = studyRepository.findByIdWithPessimistic(approveJoinStudyRequest.getStudyId()).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + approveJoinStudyRequest.getStudyId());
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+        if (approveJoinStudyRequest.getMemberId() != (study.getMember().getMemberId()))
+            throw new IllegalStateException("스터디 방장만 승인할 수 있습니다. ");
+
+        if (study.getRemainingNumber() <= 0) {
+            throw new IllegalStateException("참여 가능인원수가 "
+                    + study.getRemainingNumber() + "명으로 참여할 수 없는 스터디입니다. ");
+        }
+
+        if (!memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(
+                approveJoinStudyRequest.getStudyId(), approveJoinStudyRequest.getRequestMemberId())) {
+            throw new IllegalStateException("참여한 적 없는 스터디입니다.");
+        }
+
+        MemberStudy memberStudy = memberStudyRepository.findMemberStudyByStudy_StudyIdAndMember_MemberId(approveJoinStudyRequest.getStudyId(),
+                approveJoinStudyRequest.getRequestMemberId());
+
+        study.decreaseRemainingNumber();
+        memberStudy.approveJoin();
+    }
+
+    @Transactional
+    public void denyJoinStudy(JoinStudyRequest denyJoinStudyRequest) {
+        Study study = studyRepository.findByIdWithPessimistic(denyJoinStudyRequest.getStudyId()).orElseThrow(() -> {
+            log.error("존재하지 않는 스터디 입니다. studyId = " + denyJoinStudyRequest.getStudyId());
+            return new NoSuchElementException("존재하지 않는 스터디 입니다. ");
+        });
+
+        if (!memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(
+                denyJoinStudyRequest.getStudyId(), denyJoinStudyRequest.getMemberId())) {
+            throw new IllegalStateException("참여한 적 없는 스터디입니다.");
+        }
+
+        MemberStudy memberStudy = memberStudyRepository.findMemberStudyByStudy_StudyIdAndMember_MemberId(denyJoinStudyRequest.getStudyId(),
+                denyJoinStudyRequest.getRequestMemberId());
+
+        memberStudy.denyJoin();
     }
 }

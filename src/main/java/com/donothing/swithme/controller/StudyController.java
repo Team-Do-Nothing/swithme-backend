@@ -81,6 +81,36 @@ public class StudyController {
                 HttpStatus.OK);
     }
 
+    @PutMapping("/approve/join/{studyId}")
+    @ApiOperation(value = "해당 스터디 승인", notes = "해당 스터디에 방장이 참여요청을 한 사용자에게 승인을 해주는 API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> approveJoinStudy(@PathVariable String studyId,
+            @RequestBody @Valid JoinStudyRequest request,
+            @AuthenticationPrincipal UserDetails user) {
+        studyService.approveJoinStudy(JoinStudyRequest.builder()
+                .studyId(Long.valueOf(studyId))
+                .memberId(Long.valueOf(user.getUsername()))
+                .requestMemberId(request.getRequestMemberId())
+                .build());
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 참여요청 승인 성공",
+                null),
+                HttpStatus.OK);
+    }
+
+    @PutMapping("/deny/join/{studyId}")
+    @ApiOperation(value = "해당 스터디 거절", notes = "해당 스터디에 방장이 참여요청을 한 사용자에게 거부하는 API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> denyJoinStudy(@PathVariable String studyId,
+            @RequestBody @Valid JoinStudyRequest request,
+            @AuthenticationPrincipal UserDetails user) {
+        studyService.denyJoinStudy(JoinStudyRequest.builder()
+                .studyId(Long.valueOf(studyId))
+                .memberId(Long.valueOf(user.getUsername()))
+                .requestMemberId(request.getRequestMemberId())
+                .build());
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 참여요청 거절 성공",
+                null),
+                HttpStatus.OK);
+    }
+
     @PostMapping("/end/{studyId}")
     @ApiOperation(value = "해당 스터디 조기 종료", notes = "해당 스터디를 조기종료 하는 API 입니다.")
     public ResponseEntity<ResponseDto<Void>> endStudy(@PathVariable String studyId,
