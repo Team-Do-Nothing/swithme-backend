@@ -9,13 +9,15 @@ spring:
 
   jpa:
     hibernate:
-#    ddl-auto:
       ddl-auto: none
-#      ddl-auto: create
+    #      ddl-auto: none
+
     properties:
       hibernate:
         #        show_sql: true
         format_sql: true
+      database: mysql
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
   redis:
     host: localhost
@@ -42,3 +44,8 @@ cloud:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_BUCKET}
+
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
