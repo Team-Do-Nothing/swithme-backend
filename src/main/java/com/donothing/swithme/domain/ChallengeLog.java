@@ -11,11 +11,16 @@ import javax.persistence.*;
 public class ChallengeLog extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chalLogId;
+    private Long challengeLogId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_chal_id")
+    @JoinColumn(name = "member_challenge_id")
     private MemberChallenge memberChallenge;
 
+    @Column(nullable = false)
     private String s3Url;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ChallengeLogStatus challengeLogStatus; // ACTIVE, INACTIVE
 }
