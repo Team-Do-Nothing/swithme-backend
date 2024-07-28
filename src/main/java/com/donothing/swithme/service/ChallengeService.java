@@ -116,7 +116,7 @@ public class ChallengeService {
         // 3. 챌린지 인증 내역 비활성화 처리
         List<MemberChallenge> memberChallList = memberChallengeRepository.findAllByChallenge_ChallengeId(challengeId);
         for (MemberChallenge memberchallenge : memberChallList) {
-            Long memChallId = memberchallenge.getMemberChalId();
+            Long memChallId = memberchallenge.getMemberChallengeId();
             ChallengeLog challengeLog = challengeLogRepository.findByMemberChallenge_MemberChallengeId(memChallId);
             if (challengeLog.getChallengeLogStatus().equals(ACTIVE)) {
                 challengeLog.setChallengeLogStatus(INACTIVE);
