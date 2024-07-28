@@ -55,7 +55,7 @@ public class ChallengeService {
     public boolean validationDate(String startDate) {
         try {
             LocalDate today = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate inputDate = LocalDate.parse(startDate, formatter);
 
             return inputDate.isAfter(today);
@@ -118,6 +118,7 @@ public class ChallengeService {
         for (MemberChallenge memberchallenge : memberChallList) {
             Long memChallId = memberchallenge.getMemberChallengeId();
             ChallengeLog challengeLog = challengeLogRepository.findByMemberChallenge_MemberChallengeId(memChallId);
+            if (challengeLog == null) continue;
             if (challengeLog.getChallengeLogStatus().equals(ACTIVE)) {
                 challengeLog.setChallengeLogStatus(INACTIVE);
             }
