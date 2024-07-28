@@ -18,5 +18,7 @@ public interface MemberChallengeRepository extends JpaRepository<MemberChallenge
     List<MemberChallenge> fetchJoin(@Param("memberId") long memberId, @Param("studyId") long studyId);
 
     boolean existsByChallenge_ChallengeIdAndMember_MemberId(Long studyId, Long memberId);
+
+    List<MemberChallenge> findAllByChallenge_ChallengeId(Long challengeId);
 }
 

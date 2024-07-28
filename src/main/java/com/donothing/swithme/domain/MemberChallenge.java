@@ -19,7 +19,7 @@ public class MemberChallenge extends BaseTimeEntity {
     private Challenge challenge;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
