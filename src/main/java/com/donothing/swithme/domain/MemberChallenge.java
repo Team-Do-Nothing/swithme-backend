@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class MemberChallenge extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberChalId;
+    private Long memberChallengeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
