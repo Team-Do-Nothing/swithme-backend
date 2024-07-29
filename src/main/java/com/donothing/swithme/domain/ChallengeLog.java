@@ -23,4 +23,8 @@ public class ChallengeLog extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ChallengeLogStatus challengeLogStatus; // ACTIVE, INACTIVE
+
+    public void setChallengeLogStatus(ChallengeLogStatus challengeLogStatus) {
+        this.challengeLogStatus = challengeLogStatus;
+    }
 }

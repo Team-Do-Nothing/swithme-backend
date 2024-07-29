@@ -1,17 +1,12 @@
 package com.donothing.swithme.service;
 
-import com.donothing.swithme.domain.Challenge;
-import com.donothing.swithme.domain.MemberChallenge;
-import com.donothing.swithme.domain.MemberStudy;
-import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.domain.*;
 import com.donothing.swithme.dto.JoinChallengeRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
-import com.donothing.swithme.repository.ChallengeRepository;
-import com.donothing.swithme.repository.MemberChallengeRepository;
-import com.donothing.swithme.repository.MemberStudyRepository;
-import com.donothing.swithme.repository.StudyRepository;
+import com.donothing.swithme.repository.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -22,6 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
+import static com.donothing.swithme.domain.ChallengeLogStatus.ACTIVE;
+import static com.donothing.swithme.domain.ChallengeLogStatus.INACTIVE;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final MemberChallengeRepository memberChallengeRepository;
     private final StudyRepository studyRepository;
+    private final ChallengeLogRepository challengeLogRepository;
 
     private final MemberStudyRepository memberStudyRepository;
 
@@ -54,7 +55,7 @@ public class ChallengeService {
     public boolean validationDate(String startDate) {
         try {
             LocalDate today = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate inputDate = LocalDate.parse(startDate, formatter);
 
             return inputDate.isAfter(today);
@@ -100,5 +101,33 @@ public class ChallengeService {
     public List<ChallengeDetailResponseDto> getMyChallenge(String username, String studyId) {
         List<MemberChallenge> challenges = memberChallengeRepository.fetchJoin(Long.parseLong(username), Long.parseLong(studyId));
         return challenges.stream().map(ChallengeDetailResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateChallengeLogStatusToInactive(Long challengeId, Long loginId) {
+        // 1. 챌린지 검증
+        Challenge challenge = validateChallenge(challengeId);
+
+        // 2. 챌린지 개설자(방장) 검증
+        if (loginId != (challenge.getStudy().getMember().getMemberId())) {
+            throw new IllegalStateException("스터디 방장만 챌린지를 삭제할 수 있습니다.");
+        }
+
+        // 3. 챌린지 인증 내역 비활성화 처리
+        List<MemberChallenge> memberChallList = memberChallengeRepository.findAllByChallenge_ChallengeId(challengeId);
+        for (MemberChallenge memberchallenge : memberChallList) {
+            Long memChallId = memberchallenge.getMemberChallengeId();
+            ChallengeLog challengeLog = challengeLogRepository.findByMemberChallenge_MemberChallengeId(memChallId);
+            if (challengeLog == null) continue;
+            if (challengeLog.getChallengeLogStatus().equals(ACTIVE)) {
+                challengeLog.setChallengeLogStatus(INACTIVE);
+            }
+        }
+
+        // 4. 챌린지 관련 연관관계 삭제
+        // 챌린지 삭제
+        challengeRepository.deleteById(challengeId);
+        // 챌린지 내 멤버들 연관관계 삭제
+        memberChallengeRepository.deleteAll(memberChallList);
     }
 }
