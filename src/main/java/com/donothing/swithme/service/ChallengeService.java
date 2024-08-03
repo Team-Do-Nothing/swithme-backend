@@ -2,20 +2,25 @@ package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.*;
 import com.donothing.swithme.dto.JoinChallengeRequestDto;
+import com.donothing.swithme.dto.challenge.ChallengeCertifyRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
 import com.donothing.swithme.repository.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import com.donothing.swithme.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 
@@ -30,8 +35,8 @@ public class ChallengeService {
     private final MemberChallengeRepository memberChallengeRepository;
     private final StudyRepository studyRepository;
     private final ChallengeLogRepository challengeLogRepository;
-
     private final MemberStudyRepository memberStudyRepository;
+    private final S3Service s3Service;
 
     public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
         Study study = studyRepository.findById(request.getStudyId()).orElseThrow(() -> {
@@ -129,5 +134,13 @@ public class ChallengeService {
         challengeRepository.deleteById(challengeId);
         // 챌린지 내 멤버들 연관관계 삭제
         memberChallengeRepository.deleteAll(memberChallList);
+    }
+
+    public String certifyChallenge(MultipartFile file, ChallengeCertifyRequestDto certifyRequestDto,
+                                   Long memberId) throws IOException {
+        // S3에 파일 업로드
+        String fileUrl = s3Service.uploadFile(file, memberId.toString());
+        System.out.println(fileUrl);
+        return "";
     }
 }

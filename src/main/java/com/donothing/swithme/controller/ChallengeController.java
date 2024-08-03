@@ -1,12 +1,13 @@
 package com.donothing.swithme.controller;
 
 import com.donothing.swithme.dto.JoinChallengeRequestDto;
-import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
-import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
-import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
+import com.donothing.swithme.dto.challenge.*;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.service.ChallengeService;
+import com.donothing.swithme.util.SecurityUtil;
 import io.swagger.annotations.ApiOperation;
+
+import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequestMapping("/api/v1/challenge")
@@ -72,5 +74,16 @@ public class ChallengeController {
         challengeService.updateChallengeLogStatusToInactive(challengeId, Long.valueOf(user.getUsername()));
         return new ResponseEntity<>(new ResponseDto<>(204, "챌린지 삭제 성공", null),
                 HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/daily")
+    @ApiOperation(value = "챌린지 데일리 인증하기", notes = "챌린지 데일리 인증용 API 입니다.")
+    public ResponseEntity<ResponseDto<ChallengeCertifyResponseDto>> certifyDailyChallenge(
+            @ModelAttribute ChallengeCertifyRequestDto certifyRequestDto,
+            @RequestPart("file")MultipartFile multipartFile) throws IOException {
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        challengeService.certifyChallenge(multipartFile, certifyRequestDto, memberId);
+        return new ResponseEntity<>(new ResponseDto<>(201, "챌린지 데일리 인증 성공", null),
+                HttpStatus.CREATED);
     }
 }
