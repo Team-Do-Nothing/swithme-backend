@@ -13,7 +13,7 @@ public class S3Config {
 
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
-    @Value("${cloud.aws.credentials.secret-key")
+    @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
     @Value("${cloud.aws.region.static}")
     private String region;
@@ -22,7 +22,8 @@ public class S3Config {
     public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+        return (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
                 .build();
