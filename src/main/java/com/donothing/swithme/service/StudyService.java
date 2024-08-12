@@ -9,6 +9,7 @@ import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.repository.ChallengeRepository;
+import com.donothing.swithme.repository.CommentCustomRepository;
 import com.donothing.swithme.repository.CommentRepository;
 import com.donothing.swithme.repository.MemberStudyRepository;
 import com.donothing.swithme.repository.StudyRepository;
@@ -28,7 +29,8 @@ import org.springframework.stereotype.Service;
 public class StudyService {
     private final StudyRepository studyRepository;
 
-    private final CommentRepository commentRepository;
+    private final CommentCustomRepository commentCustomRepository;
+    private final CommentRepository CommentRepository;
 
     private final MemberStudyRepository memberStudyRepository;
 
@@ -61,27 +63,28 @@ public class StudyService {
         return studyRepository.searchStudies(condition, pageable);
     }
 
-    public List<StudyCommentListResponseDto> getCommentList(String studyId) {
+    public Page<StudyCommentListResponseDto> getCommentList(String studyId, Pageable pageable) {
         validationAndGetStudy(studyId);
-        List<Comment> allComments = commentRepository.findByStudy_StudyId(Long.valueOf(studyId));
+
+//        List<StudyCommentListResponseDto> allComments = commentRepository.findByStudy_StudyId(Long.valueOf(studyId));
 
         // 대댓글이 아닌 댓글들을 추출하여 StudyCommentListResponseDto로 매핑
-        List<StudyCommentListResponseDto> comments = allComments.stream()
-                .filter(c -> c.getCommentTag() == null) // 대댓글이 아닌 댓글 필터링
-                .map(StudyCommentListResponseDto::new)
-                .collect(Collectors.toList());
+//        List<StudyCommentListResponseDto> comments = allComments.stream()
+//                .filter(c -> c.getCommentTag() == null) // 대댓글이 아닌 댓글 필터링
+//                .map(StudyCommentListResponseDto::new)
+//                .collect(Collectors.toList());
+//
+//        // 각 댓글에 대해 대댓글 추가
+//        for (StudyCommentListResponseDto comment : comments) {
+//            List<StudyCommentListResponseDto> recomment = allComments.stream()
+//                    .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
+//                    .map(StudyCommentListResponseDto::new)
+//                    .collect(Collectors.toList());
+//
+//            comment.setRecomment(recomment);
+//        }
 
-        // 각 댓글에 대해 대댓글 추가
-        for (StudyCommentListResponseDto comment : comments) {
-            List<StudyCommentListResponseDto> recomment = allComments.stream()
-                    .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
-                    .map(StudyCommentListResponseDto::new)
-                    .collect(Collectors.toList());
-
-            comment.setRecomment(recomment);
-        }
-
-        return comments;
+        return commentCustomRepository.findByComment(Long.valueOf(studyId), pageable);
     }
 
     public Study validationAndGetStudy(String studyId) {
@@ -93,13 +96,13 @@ public class StudyService {
 
     public void comment(String studyId, StudyCommentReqeustDto reuqest) {
         Study study = validationAndGetStudy(studyId);
-        commentRepository.save(
+        CommentRepository.save(
                 reuqest.toEntity(reuqest.getMemberId(),
                         Long.parseLong(studyId)));
     }
     @Transactional
     public void updateComment(StudyCommentUpdateRequestDto request) {
-        Comment comment = commentRepository.findById(request.getCommentId()).orElseThrow(() -> {
+        Comment comment = CommentRepository.findById(request.getCommentId()).orElseThrow(() -> {
             log.error("존재하지 않는 댓글 입니다. studyId = " + request.getCommentId());
             return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
         });
@@ -109,12 +112,12 @@ public class StudyService {
 
     @Transactional
     public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+        Comment comment = CommentRepository.findById(commentId).orElseThrow(() -> {
             log.error("존재하지 않는 댓글 입니다. studyId = " + commentId);
             return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
         });
 
-        commentRepository.delete(comment);
+        CommentRepository.delete(comment);
     }
 
     @Transactional
@@ -164,7 +167,7 @@ public class StudyService {
         memberStudyRepository.deleteAll(memberStudy);
         studyRepository.delete(study);
     }
-  
+
     public void approveJoinStudy(JoinStudyRequest approveJoinStudyRequest) {
         Study study = studyRepository.findByIdWithPessimistic(approveJoinStudyRequest.getStudyId()).orElseThrow(() -> {
             log.error("존재하지 않는 스터디 입니다. studyId = " + approveJoinStudyRequest.getStudyId());

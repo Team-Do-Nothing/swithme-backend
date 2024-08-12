@@ -132,9 +132,10 @@ public class StudyController {
 
     @GetMapping("/comment/{studyId}")
     @ApiOperation(value = "해당 스터디 댓글 조회", notes = "해당 스터디의 댓글을 조회하는 API 입니다.")
-    public ResponseEntity<ResponseDto<List<StudyCommentListResponseDto>>> getCommentList(@PathVariable String studyId) {
+    public ResponseEntity<ResponseDto<Page<StudyCommentListResponseDto>>> getCommentList(@PathVariable String studyId
+            , Pageable pageable) {
         return new ResponseEntity<>(new ResponseDto<>(200, "해당 스터디 댓글 내용 조회 성공",
-                studyService.getCommentList(studyId)),
+                studyService.getCommentList(studyId, pageable)),
                 HttpStatus.OK);
     }
     @PostMapping("/comment/{studyId}")
