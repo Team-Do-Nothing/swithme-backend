@@ -66,24 +66,6 @@ public class StudyService {
     public Page<StudyCommentListResponseDto> getCommentList(String studyId, Pageable pageable) {
         validationAndGetStudy(studyId);
 
-//        List<StudyCommentListResponseDto> allComments = commentRepository.findByStudy_StudyId(Long.valueOf(studyId));
-
-        // 대댓글이 아닌 댓글들을 추출하여 StudyCommentListResponseDto로 매핑
-//        List<StudyCommentListResponseDto> comments = allComments.stream()
-//                .filter(c -> c.getCommentTag() == null) // 대댓글이 아닌 댓글 필터링
-//                .map(StudyCommentListResponseDto::new)
-//                .collect(Collectors.toList());
-//
-//        // 각 댓글에 대해 대댓글 추가
-//        for (StudyCommentListResponseDto comment : comments) {
-//            List<StudyCommentListResponseDto> recomment = allComments.stream()
-//                    .filter(c -> c.getCommentTag() != null && c.getCommentTag().equals(comment.getCommentId()))
-//                    .map(StudyCommentListResponseDto::new)
-//                    .collect(Collectors.toList());
-//
-//            comment.setRecomment(recomment);
-//        }
-
         return commentCustomRepository.findByComment(Long.valueOf(studyId), pageable);
     }
 
