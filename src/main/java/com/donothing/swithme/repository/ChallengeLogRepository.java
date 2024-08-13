@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long> {
 
-    ChallengeLog findByMemberChallenge_MemberChallengeId(Long memChalId);
+    //ChallengeLog findByMemberChallenge_MemberChallengeId(Long memberChallengeId);
+    List<ChallengeLog> findAllByChallenge_ChallengeId(Long challengeId);
 }

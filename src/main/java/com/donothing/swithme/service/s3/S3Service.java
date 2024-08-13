@@ -23,23 +23,26 @@ public class S3Service {
 
     private final AmazonS3Client amazonS3Client;
 
-    @Value("${cloud.aws.s3.bucket")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public String uploadFile(MultipartFile file, String pathName) throws IOException {
+//        Optional<File> uploadFile = null;
         File uploadFile = null;
         try {
             uploadFile = convert(file)
                     .orElseThrow(() -> new IllegalArgumentException("[error]: MultipartFIle -> 파일 변환 실패"));
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println(e);
             throw new RuntimeException(e);
         }
 
         String fileName = pathName + "/" + UUID.randomUUID();
-
+        System.out.println(uploadFile + "<< uploadFile");
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
 
+//        return "uploadImageUrl";
         return uploadImageUrl;
     }
 
@@ -48,6 +51,7 @@ public class S3Service {
      * @return 업로드 경로
      */
     public String putS3(File uploadFile, String fileName) {
+        System.out.println("???bucket > " + bucket);
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
@@ -87,7 +91,7 @@ public class S3Service {
      *  로컬에 파일 업로드 및 변환
      */
     private Optional<File> convert(MultipartFile file) throws IOException {
-        String dirPath = System.getProperty("user.dir") + "/" + file.getOriginalFilename();
+        String dirPath = System.getProperty("user.dir") + "/challenge/" + file.getOriginalFilename();
         File convertFile = new File(dirPath);
 
         if (convertFile.createNewFile()) {

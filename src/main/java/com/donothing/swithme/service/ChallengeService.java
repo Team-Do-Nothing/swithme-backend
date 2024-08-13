@@ -2,20 +2,25 @@ package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.*;
 import com.donothing.swithme.dto.JoinChallengeRequestDto;
+import com.donothing.swithme.dto.challenge.ChallengeCertifyRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterRequestDto;
 import com.donothing.swithme.dto.challenge.ChallengeRegisterResponseDto;
 import com.donothing.swithme.repository.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import com.donothing.swithme.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 
@@ -30,8 +35,8 @@ public class ChallengeService {
     private final MemberChallengeRepository memberChallengeRepository;
     private final StudyRepository studyRepository;
     private final ChallengeLogRepository challengeLogRepository;
-
     private final MemberStudyRepository memberStudyRepository;
+    private final S3Service s3Service;
 
     public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
         Study study = studyRepository.findById(request.getStudyId()).orElseThrow(() -> {
@@ -114,20 +119,40 @@ public class ChallengeService {
         }
 
         // 3. 챌린지 인증 내역 비활성화 처리
-        List<MemberChallenge> memberChallList = memberChallengeRepository.findAllByChallenge_ChallengeId(challengeId);
-        for (MemberChallenge memberchallenge : memberChallList) {
-            Long memChallId = memberchallenge.getMemberChallengeId();
-            ChallengeLog challengeLog = challengeLogRepository.findByMemberChallenge_MemberChallengeId(memChallId);
+        List<ChallengeLog> challengeLogList = challengeLogRepository.findAllByChallenge_ChallengeId(challengeId);
+
+        for (ChallengeLog challengeLog : challengeLogList) {
             if (challengeLog == null) continue;
+
             if (challengeLog.getChallengeLogStatus().equals(ACTIVE)) {
                 challengeLog.setChallengeLogStatus(INACTIVE);
             }
         }
+        challengeLogRepository.saveAll(challengeLogList);
 
         // 4. 챌린지 관련 연관관계 삭제
         // 챌린지 삭제
         challengeRepository.deleteById(challengeId);
-        // 챌린지 내 멤버들 연관관계 삭제
-        memberChallengeRepository.deleteAll(memberChallList);
+        // TODO 챌린지 내 멤버들 연관관계 삭제
+        //memberChallengeRepository.deleteAll();
+    }
+
+    public void certifyChallenge(MultipartFile file, ChallengeCertifyRequestDto certifyRequestDto)
+            throws IOException {
+        // 1. 챌린지 검증
+        Challenge challenge = validateChallenge(certifyRequestDto.getChallengeId());
+
+        // 2. S3에 파일 업로드
+        String fileUrl = s3Service.uploadFile(file, certifyRequestDto.getMemberId().toString());
+        System.out.println(fileUrl);
+
+        // 챌린지 인증내역 저장 (방장 자동 승인)
+        // 3-1. 챌린지 개설자(방장) 검증
+        if (certifyRequestDto.getMemberId() == (challenge.getStudy().getMember().getMemberId())) {
+            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, ApproveStatus.APPROVE));
+        }
+        else { // 3-2. 챌린지 인증내역 저장 (승인 대기 상태)
+            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, ApproveStatus.WAIT));
+        }
     }
 }
