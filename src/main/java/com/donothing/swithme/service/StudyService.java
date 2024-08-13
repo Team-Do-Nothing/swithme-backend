@@ -164,7 +164,8 @@ public class StudyService {
         memberStudyRepository.deleteAll(memberStudy);
         studyRepository.delete(study);
     }
-  
+
+    @Transactional
     public void approveJoinStudy(JoinStudyRequest approveJoinStudyRequest) {
         Study study = studyRepository.findByIdWithPessimistic(approveJoinStudyRequest.getStudyId()).orElseThrow(() -> {
             log.error("존재하지 않는 스터디 입니다. studyId = " + approveJoinStudyRequest.getStudyId());

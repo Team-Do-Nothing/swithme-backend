@@ -82,7 +82,9 @@ public class ChallengeController {
             @ModelAttribute ChallengeCertifyRequestDto certifyRequestDto,
             @RequestPart("file")MultipartFile multipartFile) throws IOException {
         Long memberId = SecurityUtil.getCurrentMemberId();
-        challengeService.certifyChallenge(multipartFile, certifyRequestDto, memberId);
+        certifyRequestDto.setMemberId(memberId);
+
+        challengeService.certifyChallenge(multipartFile, certifyRequestDto);
         return new ResponseEntity<>(new ResponseDto<>(201, "챌린지 데일리 인증 성공", null),
                 HttpStatus.CREATED);
     }
