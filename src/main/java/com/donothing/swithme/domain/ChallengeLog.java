@@ -39,4 +39,8 @@ public class ChallengeLog extends BaseTimeEntity {
     public void setChallengeLogStatus(ChallengeLogStatus challengeLogStatus) {
         this.challengeLogStatus = challengeLogStatus;
     }
+
+    public void setChallengeLogApproveStatus(ApproveStatus challengeLogApproveStatus) {
+        this.challengeLogApproveStatus = challengeLogApproveStatus;
+    }
 }
