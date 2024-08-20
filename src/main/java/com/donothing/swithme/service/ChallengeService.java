@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 
+import static com.donothing.swithme.domain.ApproveStatus.*;
 import static com.donothing.swithme.domain.ChallengeLogStatus.ACTIVE;
 import static com.donothing.swithme.domain.ChallengeLogStatus.INACTIVE;
 
@@ -38,6 +39,7 @@ public class ChallengeService {
     private final MemberStudyRepository memberStudyRepository;
     private final S3Service s3Service;
 
+    @Transactional
     public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
         Study study = studyRepository.findById(request.getStudyId()).orElseThrow(() -> {
             log.error("존재하지 않는 스터디 입니다. studyId = " + request.getStudyId());
@@ -75,6 +77,7 @@ public class ChallengeService {
         return new ChallengeDetailResponseDto(challenge);
     }
 
+    @Transactional
     public void joinChallenge(JoinChallengeRequestDto request) {
         Challenge challenge = validateChallenge(request.getChallengeId());
 
@@ -137,6 +140,7 @@ public class ChallengeService {
         //memberChallengeRepository.deleteAll();
     }
 
+    @Transactional
     public void certifyChallenge(MultipartFile file, ChallengeCertifyRequestDto certifyRequestDto)
             throws IOException {
         // 1. 챌린지 검증
@@ -149,10 +153,33 @@ public class ChallengeService {
         // 챌린지 인증내역 저장 (방장 자동 승인)
         // 3-1. 챌린지 개설자(방장) 검증
         if (certifyRequestDto.getMemberId() == (challenge.getStudy().getMember().getMemberId())) {
-            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, ApproveStatus.APPROVE));
+            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, APPROVE));
         }
         else { // 3-2. 챌린지 인증내역 저장 (승인 대기 상태)
-            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, ApproveStatus.WAIT));
+            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, WAIT));
+        }
+    }
+
+    @Transactional
+    public void approveChallengeLog(Long loginId, String challengeLogId, String approveStatus) {
+        // 1. 챌린지 유효성 검증
+        ChallengeLog challengeLog = challengeLogRepository.findById(Long.parseLong(challengeLogId)).orElseThrow(() -> {
+                    log.error("존재하지 않는 챌린지로그입니다. challengeLogId = " + challengeLogId);
+                    return new NoSuchElementException("존재하지 않는 챌린지입니다.");});
+        Challenge challenge = challengeLog.getChallenge();
+
+        // 2. 챌린지 개설자(방장) 검증
+        if (loginId != (challenge.getStudy().getMember().getMemberId())) {
+            throw new IllegalStateException("챌린지 개설자만 챌린지 인증을 승인할 수 있습니다.");
+        }
+
+        // 3. 챌린지 인증 도메인 승인/거절 (WAIT -> APPROVE/DENY)
+        if (approveStatus.equals(APPROVE)){
+            challengeLog.setChallengeLogApproveStatus(APPROVE);
+        } else if (approveStatus.equals(DENY)) {
+            challengeLog.setChallengeLogApproveStatus(DENY);
+        } else {
+            throw new IllegalStateException("유효하지 않은 상태 코드값입니다.");
         }
     }
 }

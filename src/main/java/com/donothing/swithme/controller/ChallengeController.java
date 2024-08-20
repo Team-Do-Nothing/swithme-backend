@@ -88,4 +88,15 @@ public class ChallengeController {
         return new ResponseEntity<>(new ResponseDto<>(201, "챌린지 데일리 인증 성공", null),
                 HttpStatus.CREATED);
     }
+
+    @PutMapping("/{challengeLogId}/{approveStatus}")
+    @ApiOperation(value = "챌린지 인증 승인하기", notes = "챌린지 방장 인증 여부 승인용 API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> approveChallengeLog(
+            @PathVariable("challengeLogId") String challengeLogId,
+            @PathVariable("approveStatus") String approveStatus) {
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        challengeService.approveChallengeLog(memberId, challengeLogId, approveStatus);
+        return new ResponseEntity<>(new ResponseDto<>(200, "챌린지 인증 승인 성공", null),
+                HttpStatus.OK);
+    }
 }
