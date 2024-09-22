@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:"));
 //        configuration.addAllowedOrigin("*");        // 모든 ip에 응답
         configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://swithme-rho.vercel.app");
         configuration.addAllowedHeader("*");        // 모든 header 에 응답
         configuration.addAllowedMethod("*");        // 모든 Method(GET,POST,PUT,DELETE 등) 요청 허용
         configuration.setAllowCredentials(true);    // 내 서버가 응답할 때 json을 자바스크립트에서 처리할 수 있게 할지 설정
