@@ -43,7 +43,7 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-
+        
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION_TIMES);
         String accessToken = Jwts.builder()
@@ -61,6 +61,7 @@ public class JwtTokenProvider {
 
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
+                .memberId(authentication.getName())
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
