@@ -45,7 +45,10 @@ public class StudyDetailResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String dateStudyEnd;
 
-    public StudyDetailResponseDto(Study study) {
+    @ApiModelProperty(value = "스터디 댓글 수")
+    private long commentCnt;
+
+    public StudyDetailResponseDto(Study study, long commentCnt) {
         this.studyId = study.getStudyId();
         this.createdMember = MemberInfoResponseDto.builder().
                 memberId(study.getMember().getMemberId()).
@@ -60,9 +63,10 @@ public class StudyDetailResponseDto {
         this.studyStatus = study.getStudyStatus();
         this.dateStudyStart = study.getDateStudyStart();
         this.dateStudyEnd = study.getDateStudyEnd();
+        this.commentCnt = commentCnt;
     }
 
-    public StudyDetailResponseDto(Study study, boolean isBookmarked) {
+    public StudyDetailResponseDto(Study study, boolean isBookmarked, long commentCnt) {
         this.studyId = study.getStudyId();
         this.createdMember = MemberInfoResponseDto.builder().
                 memberId(study.getMember().getMemberId()).
@@ -78,5 +82,6 @@ public class StudyDetailResponseDto {
         this.studyStatus = study.getStudyStatus();
         this.dateStudyStart = study.getDateStudyStart();
         this.dateStudyEnd = study.getDateStudyEnd();
+        this.commentCnt = commentCnt;
     }
 }
