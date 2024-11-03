@@ -34,12 +34,14 @@ public class CommentCustomCustomRepositoryImpl implements CommentCustomRepositor
                                 qComment.commentId,
                                 qComment.comment,
                                 qComment.commentTag,
+                                qComment.dateCreated,
                                 qComment.member.as("member")
                         )
                 ).from(comment1)
                         .where(studyEq(studyId))
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
+                        .orderBy(comment1.dateCreated.desc())
                         .fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(comment1.count())
