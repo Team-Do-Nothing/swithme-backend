@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // TO DO : 배포 전에 URI 추가 설정 필요
 //                .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/**").permitAll()
+                // 스웨거 오류 수정
                 .antMatchers("/swagger-ui.html",
                         "/configuration/security",
                         "/configuration/ui",
