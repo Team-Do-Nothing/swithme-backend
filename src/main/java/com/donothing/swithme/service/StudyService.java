@@ -81,6 +81,7 @@ public class StudyService {
                 reuqest.toEntity(reuqest.getMemberId(),
                         Long.parseLong(studyId)));
     }
+
     @Transactional
     public void updateComment(StudyCommentUpdateRequestDto request) {
         Comment comment = CommentRepository.findById(request.getCommentId()).orElseThrow(() -> {
@@ -97,6 +98,12 @@ public class StudyService {
             log.error("존재하지 않는 댓글 입니다. studyId = " + commentId);
             return new NoSuchElementException("존재하지 않는 댓글 입니다. ");
         });
+
+        if (comment.getCommentTag() == null) {
+            // 본댓글이면 모든 대댓글 삭제
+            List<Comment> recomment = CommentRepository.findAllByCommentTag(commentId);
+            CommentRepository.deleteAll(recomment);
+        }
 
         CommentRepository.delete(comment);
     }
