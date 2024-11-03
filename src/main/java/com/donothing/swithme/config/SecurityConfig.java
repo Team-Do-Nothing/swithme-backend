@@ -54,7 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // TO DO : 배포 전에 URI 추가 설정 필요
 //                .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/**").permitAll()
-                .antMatchers("/api/v1/**").permitAll()
+                // 스웨거 오류 수정
+                .antMatchers("/swagger-ui.html",
+                        "/configuration/security",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/webjars/**").permitAll()
 //                .anyRequest().authenticated() // 나머지 API 는 전부 인증 필요
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
