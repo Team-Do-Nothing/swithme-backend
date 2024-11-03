@@ -2,9 +2,11 @@ package com.donothing.swithme.repository;
 
 import static com.donothing.swithme.domain.QBookmark.bookmark;
 import static com.donothing.swithme.domain.QStudy.study;
-
+import static com.donothing.swithme.domain.QComment.comment1;
 import com.donothing.swithme.domain.Bookmark;
+import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.QBookmark;
+import com.donothing.swithme.domain.QComment;
 import com.donothing.swithme.domain.QStudy;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
@@ -34,6 +36,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
     public Page<StudyDetailResponseDto> searchStudies(StudySearchRequest request, Pageable pageable) {
         QStudy qStudy = new QStudy("study");
         QBookmark qBookmark = new QBookmark("bookmark");
+        QComment qComment = new QComment("comment");
 
         List<Study> studyList =
                 queryFactory.select(
@@ -58,10 +61,27 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
                 .from(study);
 
+        List<Comment> commentList =
+                queryFactory.select(
+                                Projections.fields(Comment.class,
+                                        qComment.commentId,
+                                        qComment.study.as("study")))
+                        .from(comment1)
+                        .fetch();
+
         List<StudyDetailResponseDto> result;
+        // commentList를 사용하여 각 Study의 studyId별 comment 갯수를 count하는 commentMap 생성
+        Map<Long, Long> commentMap = commentList.stream()
+                .collect(Collectors.groupingBy(comment -> comment.getStudy().getStudyId(), Collectors.counting()));
 
         if (request.getMemberId() == null) {
-            result = studyList.stream().map(StudyDetailResponseDto::new).collect(Collectors.toList());
+            // studyList에서 각 study에 맞는 commentCount를 포함하여 StudyDetailResponseDto 생성
+            result = studyList.stream()
+                    .map(study -> {
+                        long commentCount = commentMap.getOrDefault(study.getStudyId(), 0L); // studyId에 맞는 comment 갯수
+                        return new StudyDetailResponseDto(study, commentCount);
+                    })
+                    .collect(Collectors.toList());
         } else {
             List<Bookmark> bookmarkList = queryFactory.select(
                             Projections.fields(Bookmark.class,
@@ -81,7 +101,8 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
 
             result = studyList.stream().map(study -> {
                 boolean isBookmarked = bookmarkMap.getOrDefault(study.getStudyId(), false);
-                return new StudyDetailResponseDto(study, isBookmarked);
+                long commentCount = commentMap.getOrDefault(study.getStudyId(), 0L); // studyId에 맞는 comment 갯수
+                return new StudyDetailResponseDto(study, isBookmarked, commentCount);
             }).collect(Collectors.toList());
         }
 
