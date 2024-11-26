@@ -60,6 +60,8 @@ public class StudyService {
     }
 
     public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable) {
+        System.out.println("service단 > 여기 확인해봐 " + pageable.getOffset());
+        System.out.println("service단 > 여기 확인해봐 " + pageable.getPageSize());
         return studyRepository.searchStudies(condition, pageable);
     }
     public Page<StudyCommentListResponseDto> getCommentList(String studyId, Pageable pageable) {

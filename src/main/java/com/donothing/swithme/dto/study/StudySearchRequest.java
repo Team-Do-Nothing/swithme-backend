@@ -1,5 +1,6 @@
 package com.donothing.swithme.dto.study;
 
+import com.donothing.swithme.common.PagingRequest;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class StudySearchRequest {
+public class StudySearchRequest extends PagingRequest {
     @ApiModelProperty(value = "카테고리")
     private String category;
 

@@ -1,5 +1,6 @@
 package com.donothing.swithme.controller;
 
+import com.donothing.swithme.common.PagingRequest;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.dto.study.*;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,9 +39,11 @@ public class StudyController {
 
     @GetMapping
     @ApiOperation(value = "모든 스터디 조회", notes = "스터디를 조회하는 API 입니다.")
-    public Page<StudyDetailResponseDto> getStudies(StudySearchRequest condition, Pageable pageable, @AuthenticationPrincipal UserDetails user) {
+    public Page<StudyDetailResponseDto> getStudies(
+            StudySearchRequest condition,
+            @AuthenticationPrincipal UserDetails user) {
         if (user != null) condition.setMemberId(Long.valueOf(user.getUsername()));
-        return studyService.getStudies(condition, pageable);
+        return studyService.getStudies(condition, condition.toPageable());
     }
 
     @GetMapping("/challenge/{studyId}")
@@ -132,10 +136,10 @@ public class StudyController {
 
     @GetMapping("/comment/{studyId}")
     @ApiOperation(value = "해당 스터디 댓글 조회", notes = "해당 스터디의 댓글을 조회하는 API 입니다.")
-    public ResponseEntity<ResponseDto<Page<StudyCommentListResponseDto>>> getCommentList(@PathVariable String studyId
-            , Pageable pageable) {
+    public ResponseEntity<ResponseDto<Page<StudyCommentListResponseDto>>> getCommentList(@PathVariable String studyId,
+            PagingRequest pagingRequest) {
         return new ResponseEntity<>(new ResponseDto<>(200, "해당 스터디 댓글 내용 조회 성공",
-                studyService.getCommentList(studyId, pageable)),
+                studyService.getCommentList(studyId, pagingRequest.toPageable())),
                 HttpStatus.OK);
     }
     @PostMapping("/comment/{studyId}")
