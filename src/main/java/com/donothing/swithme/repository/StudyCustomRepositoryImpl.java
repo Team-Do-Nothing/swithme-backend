@@ -37,7 +37,6 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
         QStudy qStudy = new QStudy("study");
         QBookmark qBookmark = new QBookmark("bookmark");
         QComment qComment = new QComment("comment");
-
         List<Study> studyList =
                 queryFactory.select(
                         Projections.fields(Study.class,
@@ -59,6 +58,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
+                .where(titleEq(request.getTitle()))
                 .from(study);
 
         List<Comment> commentList =
