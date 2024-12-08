@@ -3,6 +3,8 @@ package com.donothing.swithme.repository;
 import static com.donothing.swithme.domain.QBookmark.bookmark;
 import static com.donothing.swithme.domain.QStudy.study;
 import static com.donothing.swithme.domain.QComment.comment1;
+
+import com.donothing.swithme.common.SortOrder;
 import com.donothing.swithme.domain.Bookmark;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.QBookmark;
@@ -11,6 +13,8 @@ import com.donothing.swithme.domain.QStudy;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
 import com.donothing.swithme.dto.study.StudySearchRequest;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -37,6 +41,9 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
         QStudy qStudy = new QStudy("study");
         QBookmark qBookmark = new QBookmark("bookmark");
         QComment qComment = new QComment("comment");
+        OrderSpecifier<?> orderBy = request.getOrder() == SortOrder.DESC?
+                qStudy.studyId.desc() : qStudy.studyId.asc();
+
         List<Study> studyList =
                 queryFactory.select(
                         Projections.fields(Study.class,
@@ -55,6 +62,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                 .where(titleEq(request.getTitle()))
                 .offset(pageable.getOffset()) // 스킵하고 몇번째부터 시작할건지
                 .limit(pageable.getPageSize()) // 한번 조회할 때 몇개까지
+                .orderBy(orderBy)
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(study.count())
