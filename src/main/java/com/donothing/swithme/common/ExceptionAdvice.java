@@ -2,9 +2,14 @@ package com.donothing.swithme.common;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.donothing.swithme.dto.response.ErrorMessage;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -34,6 +39,26 @@ public class ExceptionAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorMessage.builder()
                 .message(message)
                 .code(HttpStatus.NOT_FOUND)
+                .build());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessage> handleValidationException(MethodArgumentNotValidException ex) {
+        BindingResult bindingResult = ex.getBindingResult();
+        Map<String, String> errors = new HashMap<>();
+
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        // 간소화된 메시지 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Validation failed for argument");
+        response.put("details", errors.toString()); // 필요하면 자세히 출력
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorMessage.builder()
+                .message(errors.toString())
+                .code(HttpStatus.BAD_REQUEST)
                 .build());
     }
 }
