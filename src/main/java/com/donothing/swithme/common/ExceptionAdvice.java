@@ -51,11 +51,6 @@ public class ExceptionAdvice {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
-        // 간소화된 메시지 반환
-        Map<String, String> response = new HashMap<>();
-        response.put("error", "Validation failed for argument");
-        response.put("details", errors.toString()); // 필요하면 자세히 출력
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorMessage.builder()
                 .message(errors.toString())
                 .code(HttpStatus.BAD_REQUEST)
