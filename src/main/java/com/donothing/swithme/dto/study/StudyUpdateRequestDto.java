@@ -32,18 +32,16 @@ public class StudyUpdateRequestDto {
     @ApiModelProperty(value = "스터디 정보", required = true)
     private String studyInfo;
 
-    @NotNull(message = "스터디 상태 값은 필수입니다.")
     @ApiModelProperty(value = "스터디 상태", required = true, allowableValues = "CURR, COMP, END")
-    private StudyStatus studyStatus;
+    private StudyStatus studyStatus = StudyStatus.CURR;
 
     @NotNull(message = "스터디 시작날짜는 필수입니다.")
-    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "스터디 시작날짜", required = true)
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message="스터디 시작일은 yyyy-MM-dd 형식의 날짜로 입력해주세요.")
+    @ApiModelProperty(value = "스터디 시작날짜", required = true, example = "2024-07-01")
     private String dateStudyStart;
 
     @NotNull(message = "스터디 마감날짜는 필수입니다.")
-    @Pattern(regexp = "^\\d{8}$", message="스터디 시작일은 yyyyMMdd 형식의 날짜로 입력해주세요.")
-    @ApiModelProperty(value = "스터디 마감날짜", required = true)
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message="스터디 마감일은 yyyy-MM-dd 형식의 날짜로 입력해주세요.")
+    @ApiModelProperty(value = "스터디 시작날짜", required = true, example = "2024-07-01")
     private String dateStudyEnd;
-
 }
