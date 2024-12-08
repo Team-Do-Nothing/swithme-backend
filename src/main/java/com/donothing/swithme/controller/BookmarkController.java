@@ -34,11 +34,11 @@ public class BookmarkController {
                 HttpStatus.CREATED);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{studyId}")
     @ApiOperation(value = "북마크 삭제", notes = "북마크를 삭제하는 API 입니다.")
-    public ResponseEntity<ResponseDto<Void>> deleteBookmark(@RequestBody @Valid
-                                                                BookmarkDeleteRequestDto request) {
-        bookmarkService.deleteBookmark(request);
+    public ResponseEntity<ResponseDto<Void>> deleteBookmark(@PathVariable String studyId,
+            @AuthenticationPrincipal UserDetails user) {
+        bookmarkService.deleteBookmark(studyId, Long.valueOf(user.getUsername()));
         return new ResponseEntity<>(new ResponseDto<>(200, "북마크 삭제 성공", null),
                 HttpStatus.OK);
     }
