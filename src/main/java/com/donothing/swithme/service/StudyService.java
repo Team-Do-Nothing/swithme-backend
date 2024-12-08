@@ -6,6 +6,7 @@ import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.MemberStudy;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.repository.ChallengeRepository;
@@ -56,6 +57,11 @@ public class StudyService {
     @Transactional
     public void updateStudy(String studyId, StudyUpdateRequestDto request) {
         Study study = validationAndGetStudy(studyId);
+
+        if (study.getStudyStatus() != StudyStatus.CURR) {
+            throw new IllegalStateException("진행 마감된 스터디는 수정할 수 없습니다. ");
+        }
+
         study.update(request);
     }
 
