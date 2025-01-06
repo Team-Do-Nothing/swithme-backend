@@ -34,6 +34,9 @@ public class Study {
     @Column(nullable = false)
     private int remainingNumber; // 참여 가능한 남은 인원수
 
+    @Column(nullable = false)
+    private String s3Url;
+
 //    private regionCode; // 지역코드
 
     @Column(columnDefinition = "TEXT", length = 1000)
@@ -48,13 +51,14 @@ public class Study {
     private String dateStudyEnd;
 
     @Builder
-    public Study(Member member, String title, StudyType studyType, int numberOfMembers, int remainingNumber, String studyInfo,
-            StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
+    public Study(Member member, String title, StudyType studyType, int numberOfMembers, int remainingNumber,
+            String studyInfo, String s3Url, StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
         this.member = member;
         this.title = title;
         this.studyType = studyType;
         this.numberOfMembers = numberOfMembers;
         this.remainingNumber = remainingNumber;
+        this.s3Url = s3Url;
         this.studyInfo = studyInfo;
         this.studyStatus = studyStatus;
         this.dateStudyStart = dateStudyStart;
@@ -65,6 +69,7 @@ public class Study {
         this.title = request.getTitle();
         this.studyType = request.getStudyType();
         this.numberOfMembers = request.getNumberOfMembers();
+        this.s3Url = request.getS3url();
         this.studyInfo = request.getStudyInfo();
         this.studyStatus = request.getStudyStatus();
         this.dateStudyStart = request.getDateStudyStart();
