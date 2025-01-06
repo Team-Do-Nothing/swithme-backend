@@ -79,24 +79,23 @@ public class ChallengeController {
     @PostMapping("/daily")
     @ApiOperation(value = "챌린지 데일리 인증하기", notes = "챌린지 데일리 인증용 API 입니다.")
     public ResponseEntity<ResponseDto<ChallengeCertifyResponseDto>> certifyDailyChallenge(
-            @ModelAttribute ChallengeCertifyRequestDto certifyRequestDto,
-            @RequestPart("file")MultipartFile multipartFile) throws IOException {
+            @ModelAttribute ChallengeCertifyRequestDto certifyRequestDto) throws IOException {
         Long memberId = SecurityUtil.getCurrentMemberId();
         certifyRequestDto.setMemberId(memberId);
 
-        challengeService.certifyChallenge(multipartFile, certifyRequestDto);
+        challengeService.certifyChallenge(certifyRequestDto);
         return new ResponseEntity<>(new ResponseDto<>(201, "챌린지 데일리 인증 성공", null),
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/{challengeLogId}/{approveStatus}")
-    @ApiOperation(value = "챌린지 인증 승인하기", notes = "챌린지 방장 인증 여부 승인용 API 입니다.")
-    public ResponseEntity<ResponseDto<Void>> approveChallengeLog(
-            @PathVariable("challengeLogId") String challengeLogId,
-            @PathVariable("approveStatus") String approveStatus) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
-        challengeService.approveChallengeLog(memberId, challengeLogId, approveStatus);
-        return new ResponseEntity<>(new ResponseDto<>(200, "챌린지 인증 승인 성공", null),
-                HttpStatus.OK);
-    }
+//    @PutMapping("/{challengeLogId}/{approveStatus}")
+//    @ApiOperation(value = "챌린지 인증 승인하기", notes = "챌린지 방장 인증 여부 승인용 API 입니다.")
+//    public ResponseEntity<ResponseDto<Void>> approveChallengeLog(
+//            @PathVariable("challengeLogId") String challengeLogId,
+//            @PathVariable("approveStatus") String approveStatus) {
+//        Long memberId = SecurityUtil.getCurrentMemberId();
+//        challengeService.approveChallengeLog(memberId, challengeLogId, approveStatus);
+//        return new ResponseEntity<>(new ResponseDto<>(200, "챌린지 인증 승인 성공", null),
+//                HttpStatus.OK);
+//    }
 }

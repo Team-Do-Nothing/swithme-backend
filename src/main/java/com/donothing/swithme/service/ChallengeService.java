@@ -37,7 +37,6 @@ public class ChallengeService {
     private final StudyRepository studyRepository;
     private final ChallengeLogRepository challengeLogRepository;
     private final MemberStudyRepository memberStudyRepository;
-    private final S3Service s3Service;
 
     @Transactional
     public ChallengeRegisterResponseDto registerChallenge(ChallengeRegisterRequestDto request) {
@@ -95,7 +94,6 @@ public class ChallengeService {
             throw new IllegalStateException("이미 참여하고 있는 유저입니다.");
         }
 
-
         memberChallengeRepository.save(request.toMemberChallenge());
     }
 
@@ -141,22 +139,18 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void certifyChallenge(MultipartFile file, ChallengeCertifyRequestDto certifyRequestDto)
+    public void certifyChallenge(ChallengeCertifyRequestDto certifyRequestDto)
             throws IOException {
         // 1. 챌린지 검증
         Challenge challenge = validateChallenge(certifyRequestDto.getChallengeId());
 
-        // 2. S3에 파일 업로드
-        String fileUrl = s3Service.uploadFile(file, certifyRequestDto.getMemberId().toString());
-        System.out.println(fileUrl);
-
         // 챌린지 인증내역 저장 (방장 자동 승인)
-        // 3-1. 챌린지 개설자(방장) 검증
+        // 2-1. 챌린지 개설자(방장) 검증
         if (certifyRequestDto.getMemberId() == (challenge.getStudy().getMember().getMemberId())) {
-            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, APPROVE));
+            challengeLogRepository.save(certifyRequestDto.toEntity(APPROVE));
         }
-        else { // 3-2. 챌린지 인증내역 저장 (승인 대기 상태)
-            challengeLogRepository.save(certifyRequestDto.toEntity(fileUrl, WAIT));
+        else { // 2-2. 챌린지 인증내역 저장 (승인 대기 상태)
+            challengeLogRepository.save(certifyRequestDto.toEntity(WAIT));
         }
     }
 
