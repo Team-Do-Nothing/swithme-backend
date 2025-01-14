@@ -18,10 +18,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -205,5 +208,29 @@ public class StudyService {
                 denyJoinStudyRequest.getRequestMemberId());
 
         memberStudy.denyJoin();
+    }
+
+    public void quitStudy(QuitStudyRequest request, UserDetails user) {
+        Long loginId = Long.valueOf(user.getUsername());
+        Long studyId = request.getStudyId();
+        // 1. 이 멤버가 방장 여부 체크. 방장인 경우, 방장 혼자 있는 경우, 스터디 삭제. 아닌 경우, 예외 처리
+        Study study = validationAndGetStudy(studyId.toString());
+
+        List<MemberStudy> studyMembers = memberStudyRepository.findByStudy_StudyId(studyId);
+        if (loginId == (study.getMember().getMemberId())){
+            int studyMemberCount = studyMembers.size();
+            if (studyMemberCount == 1) {
+                deleteStudy(studyId.toString(), loginId);
+            } else {
+                throw new IllegalStateException("스터디 내 인원이 남아 있으므로 방장은 탈퇴 불가능합니다.");
+            }
+        }
+
+        // 2. 이 멤버가 스터디 참여중인지 체크, 아니면 예외처리
+        else if (memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(studyId, loginId)) {
+            memberStudyRepository.delete(request.toEntity());
+        } else {
+            throw new IllegalStateException("현재 스터디에 참여중인 사람만 탈퇴가 가능합니다.");
+        }
     }
 }

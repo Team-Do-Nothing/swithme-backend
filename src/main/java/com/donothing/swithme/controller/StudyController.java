@@ -171,4 +171,17 @@ public class StudyController {
                 null),
                 HttpStatus.OK);
     }
+
+    @DeleteMapping("/quit/{studyId}")
+    @ApiOperation(value = "해당 스터디 나가기", notes = "해당 스터디 나가기 시 사용하는  API 입니다.")
+    public ResponseEntity<ResponseDto<Void>> approveJoinStudy(@PathVariable String studyId,
+                                                              @RequestBody @Valid QuitStudyRequest request,
+                                                              @AuthenticationPrincipal UserDetails user) {
+        request.setStudyId(Long.valueOf(studyId));
+        studyService.quitStudy(request, user);
+
+        return new ResponseEntity<>(new ResponseDto<>(201, "스터디 나가기 성공",
+                null),
+                HttpStatus.OK);
+    }
 }
