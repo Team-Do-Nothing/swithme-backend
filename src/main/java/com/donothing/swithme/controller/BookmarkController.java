@@ -1,13 +1,15 @@
 package com.donothing.swithme.controller;
 
-import com.donothing.swithme.dto.bookmark.BookmarkDeleteRequestDto;
+import com.donothing.swithme.dto.bookmark.BookmarkDetailResponseDto;
 import com.donothing.swithme.dto.bookmark.BookmarkRegisterRequestDto;
 import com.donothing.swithme.dto.bookmark.BookmarkRegisterResponseDto;
+import com.donothing.swithme.dto.bookmark.BookmarkSearchRequest;
 import com.donothing.swithme.dto.response.ResponseDto;
 import com.donothing.swithme.service.BookmarkService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +25,15 @@ import javax.validation.Valid;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
+
+    @GetMapping
+    @ApiOperation(value = "나의 북마크 조회", notes = "나의 북마크 조회하는 API 입니다.")
+    public Page<BookmarkDetailResponseDto> getBookmarks(
+            BookmarkSearchRequest condition,
+            @AuthenticationPrincipal UserDetails user) {
+        if (user != null) condition.setMemberId(Long.valueOf(user.getUsername()));
+        return bookmarkService.getBookmarks(condition, condition.toPageable());
+    }
     @PostMapping
     @ApiOperation(value = "북마크 등록", notes = "북마크를 등록하는 API 입니다.")
     public ResponseEntity<ResponseDto<BookmarkRegisterResponseDto>> registerBookmark(@RequestBody @Valid
