@@ -1,6 +1,5 @@
 package com.donothing.swithme.dto.study;
 
-import com.donothing.swithme.domain.ApproveStatus;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.MemberStudy;
 import com.donothing.swithme.domain.Study;
