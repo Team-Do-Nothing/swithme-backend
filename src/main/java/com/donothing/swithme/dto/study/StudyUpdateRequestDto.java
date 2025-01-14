@@ -32,6 +32,10 @@ public class StudyUpdateRequestDto {
     @ApiModelProperty(value = "스터디 정보", required = true)
     private String studyInfo;
 
+    @NotNull(message = "s3url이 null값일 수 없습니다.")
+    @ApiModelProperty(value = "s3url", required = true)
+    private String s3url;
+
     @ApiModelProperty(value = "스터디 상태", required = true, allowableValues = "CURR, COMP, END")
     private StudyStatus studyStatus = StudyStatus.CURR;
 

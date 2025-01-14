@@ -35,6 +35,9 @@ public class StudyRegisterRequestDto {
     @ApiModelProperty(value = "스터디 타입", required = true, allowableValues = "ONLINE, OFFLINE")
     private StudyType studyType;
 
+    @NotNull(message = "이미지 url은 필수입니다.")
+    @ApiModelProperty(value = "이미지 url", required = true)
+    private String s3Url;
     @NotNull(message = "멤버 수 값은 필수입니다.")
     @Min(1)
     @ApiModelProperty(value = "멤버 수", required = true)
@@ -63,6 +66,7 @@ public class StudyRegisterRequestDto {
                 .member(new Member(memberId))
                 .title(title)
                 .studyType(studyType)
+                .s3Url(s3Url)
                 .studyStatus(StudyStatus.CURR)
                 .numberOfMembers(numberOfMembers)
                 .remainingNumber(numberOfMembers - 1)
