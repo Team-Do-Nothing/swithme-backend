@@ -57,6 +57,7 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
                         qStudy.dateStudyStart,
                         qStudy.dateStudyEnd,
                         qStudy.member.memberId,
+                        qStudy.s3Url,
                         qStudy.member.as("member")))  // study.member 추가
                 .from(study)
                 .where(titleEq(request.getTitle()))

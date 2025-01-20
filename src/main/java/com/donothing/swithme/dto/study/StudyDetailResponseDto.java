@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import javax.persistence.Column;
+
 @Getter
 public class StudyDetailResponseDto {
     @ApiModelProperty(value = "스터디 아이디")
@@ -48,6 +50,9 @@ public class StudyDetailResponseDto {
     @ApiModelProperty(value = "스터디 댓글 수")
     private long commentCnt;
 
+    @ApiModelProperty(value = "스터디 썸네일 이미지")
+    private String s3Url;
+
     public StudyDetailResponseDto(Study study, long commentCnt) {
         this.studyId = study.getStudyId();
         this.createdMember = MemberInfoResponseDto.builder().
@@ -64,6 +69,7 @@ public class StudyDetailResponseDto {
         this.dateStudyStart = study.getDateStudyStart();
         this.dateStudyEnd = study.getDateStudyEnd();
         this.commentCnt = commentCnt;
+        this.s3Url = study.getS3Url();
     }
 
     public StudyDetailResponseDto(Study study, boolean isBookmarked, long commentCnt) {
@@ -83,5 +89,6 @@ public class StudyDetailResponseDto {
         this.dateStudyStart = study.getDateStudyStart();
         this.dateStudyEnd = study.getDateStudyEnd();
         this.commentCnt = commentCnt;
+        this.s3Url = study.getS3Url();
     }
 }
