@@ -46,6 +46,15 @@ public class StudyController {
         return studyService.getStudies(condition, condition.toPageable());
     }
 
+    @GetMapping("/my")
+    @ApiOperation(value = "내가 참여하고 있는 스터디 조회", notes = "내가 참여하고 있는 스터디를 조회하는 API 입니다.")
+    public Page<StudyDetailResponseDto> getMyStudies(
+            MyStudySearchRequest condition,
+            @AuthenticationPrincipal UserDetails user) {
+        if (user != null) condition.setMemberId(Long.valueOf(user.getUsername()));
+        return studyService.searchMyStudies(condition, condition.toPageable());
+    }
+
     @GetMapping("/challenge/{studyId}")
     @ApiOperation(value = "스터디 내 챌린지 조회", notes = "스터디 내 챌린지를 조회하는 API 입니다.")
     public ResponseEntity<ResponseDto<List<ChallengeDetailResponseDto>>> challengesByStudyId(@PathVariable String studyId) {
