@@ -2,6 +2,7 @@ package com.donothing.swithme.repository;
 
 import static com.donothing.swithme.domain.QBookmark.bookmark;
 import static com.donothing.swithme.domain.QStudy.study;
+import static com.donothing.swithme.domain.QMemberStudy.memberStudy;
 import static com.donothing.swithme.domain.QComment.comment1;
 
 import com.donothing.swithme.common.SortOrder;
@@ -9,8 +10,10 @@ import com.donothing.swithme.domain.Bookmark;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.QBookmark;
 import com.donothing.swithme.domain.QComment;
+import com.donothing.swithme.domain.QMemberStudy;
 import com.donothing.swithme.domain.QStudy;
 import com.donothing.swithme.domain.Study;
+import com.donothing.swithme.dto.study.MyStudySearchRequest;
 import com.donothing.swithme.dto.study.StudyDetailResponseDto;
 import com.donothing.swithme.dto.study.StudySearchRequest;
 import com.querydsl.core.types.Order;
@@ -118,12 +121,71 @@ public class StudyCustomRepositoryImpl implements StudyCustomRepository {
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Page<StudyDetailResponseDto> searchMyStudies(MyStudySearchRequest request, Pageable pageable) {
+        QStudy qStudy = new QStudy("study");
+        QMemberStudy qMemberStudy = new QMemberStudy("memberStudy");
+        QComment qComment = new QComment("comment");
+        OrderSpecifier<?> orderBy = request.getOrder() == SortOrder.DESC?
+                qStudy.studyId.desc() : qStudy.studyId.asc();
+
+        List<Study> studyList =
+                queryFactory.select(
+                                Projections.fields(Study.class,
+                                        qStudy.studyId,
+                                        qStudy.title,
+                                        qStudy.studyInfo,
+                                        qStudy.studyStatus,
+                                        qStudy.studyType,
+                                        qStudy.numberOfMembers,
+                                        qStudy.remainingNumber,
+                                        qStudy.dateStudyStart,
+                                        qStudy.dateStudyEnd,
+                                        qStudy.s3Url,
+                                        qStudy.member.as("member")  // 스터디 생성자 ID
+                                ))
+                        .from(qStudy)
+                        .join(qMemberStudy).on(qStudy.studyId.eq(qMemberStudy.study.studyId))
+                        .where(qMemberStudy.member.memberId.eq(request.getMemberId()))
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .orderBy(orderBy)
+                        .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(study.count())
+                .from(study);
+
+        List<Comment> commentList =
+                queryFactory.select(
+                                Projections.fields(Comment.class,
+                                        qComment.commentId,
+                                        qComment.study.as("study")))
+                        .from(comment1)
+                        .fetch();
+
+        List<StudyDetailResponseDto> result;
+        // commentList를 사용하여 각 Study의 studyId별 comment 갯수를 count하는 commentMap 생성
+        Map<Long, Long> commentMap = commentList.stream()
+                .collect(Collectors.groupingBy(comment -> comment.getStudy().getStudyId(), Collectors.counting()));
+
+        result = studyList.stream().map(study -> {
+            long commentCount = commentMap.getOrDefault(study.getStudyId(), 0L); // studyId에 맞는 comment 갯수
+            return new StudyDetailResponseDto(study, commentCount);
+        }).collect(Collectors.toList());
+
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
+    }
+
     private BooleanExpression titleEq(String title) {
         return title != null ? study.title.eq(title) : null;
     }
 
     private BooleanExpression memberIdEq(Long memberId) {
         return memberId != null ? bookmark.member.memberId.eq(memberId) : null;
+    }
+
+    private BooleanExpression studyMemberIdEq(Long memberId) {
+        return memberId != null ? memberStudy.member.memberId.eq(memberId) : null;
     }
 
 }

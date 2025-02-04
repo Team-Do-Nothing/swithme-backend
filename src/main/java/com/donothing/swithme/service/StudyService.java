@@ -72,6 +72,10 @@ public class StudyService {
         return studyRepository.searchStudies(condition, pageable);
     }
 
+    public Page<StudyDetailResponseDto> searchMyStudies(MyStudySearchRequest condition, Pageable pageable) {
+        return studyRepository.searchMyStudies(condition, pageable);
+    }
+
     public Page<StudyCommentListResponseDto> getCommentList(String studyId, Pageable pageable) {
         validationAndGetStudy(studyId);
 
