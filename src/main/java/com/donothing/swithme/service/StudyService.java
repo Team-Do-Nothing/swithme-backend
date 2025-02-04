@@ -9,6 +9,7 @@ import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.study.*;
+import com.donothing.swithme.exception.ChallengeAlreadyJoinedException;
 import com.donothing.swithme.repository.ChallengeRepository;
 import com.donothing.swithme.repository.CommentCustomRepository;
 import com.donothing.swithme.repository.CommentRepository;
@@ -24,8 +25,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -136,7 +139,7 @@ public class StudyService {
 
         if (memberStudyRepository.existsByStudy_StudyIdAndMember_MemberId(
                 joinStudyRequest.getStudyId(), joinStudyRequest.getMemberId())) {
-            throw new IllegalStateException("이미 참여한 스터디 입니다.");
+            throw new ChallengeAlreadyJoinedException("이미 참여하고 있는 유저입니다.");
         }
 
         memberStudyRepository.save(joinStudyRequest.toEntity(ApproveStatus.WAIT));
