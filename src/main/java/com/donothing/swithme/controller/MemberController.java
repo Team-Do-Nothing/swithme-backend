@@ -33,6 +33,7 @@ public class MemberController {
                 .memberId(member.getMemberId())
                 .email(member.getEmail())
                 .name(member.getName())
+                .s3Url(member.getS3Url())
                 .nickname(member.getNickname())
                 .gender(member.getGender())
                 .birthdate(member.getBirthdate())

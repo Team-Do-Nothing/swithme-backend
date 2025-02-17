@@ -10,9 +10,11 @@ public class MemberListResponseDto {
 
     private Long memberId;
     private String nickname;
+    private String s3Url;
 
     public MemberListResponseDto(MemberStudy memberStudy) {
         this.memberId = memberStudy.getMember().getMemberId();
         this.nickname = memberStudy.getMember().getNickname();
+        this.s3Url = memberStudy.getMember().getS3Url();
     }
 }
