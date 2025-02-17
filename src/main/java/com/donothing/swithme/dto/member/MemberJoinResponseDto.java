@@ -20,6 +20,7 @@ public class MemberJoinResponseDto {
     private LocalDate birthdate;
     private String phone;
     private String introduce;
+    private String s3Url;
 
     public static MemberJoinResponseDto of (Member member) {
         return new MemberJoinResponseDto(member.getMemberId(),
@@ -28,6 +29,7 @@ public class MemberJoinResponseDto {
                                         member.getGender(),
                                         member.getBirthdate(),
                                         member.getPhone(),
-                                        member.getIntroduce());
+                                        member.getIntroduce(),
+                                        member.getS3Url());
     }
 }

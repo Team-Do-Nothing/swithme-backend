@@ -38,6 +38,7 @@ public class StudyRegisterRequestDto {
     @NotNull(message = "이미지 url은 필수입니다.")
     @ApiModelProperty(value = "이미지 url", required = true)
     private String s3Url;
+
     @NotNull(message = "멤버 수 값은 필수입니다.")
     @Min(1)
     @ApiModelProperty(value = "멤버 수", required = true)

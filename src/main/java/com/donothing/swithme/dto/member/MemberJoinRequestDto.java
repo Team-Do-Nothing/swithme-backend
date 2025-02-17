@@ -5,6 +5,7 @@ import com.donothing.swithme.domain.GenderType;
 import com.donothing.swithme.domain.LoginType;
 import com.donothing.swithme.domain.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -47,6 +48,9 @@ public class MemberJoinRequestDto {
 
     private String introduce;
 
+    @ApiModelProperty(value = "이미지 url", required = false)
+    private String s3Url;
+
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(this.email)
@@ -59,6 +63,7 @@ public class MemberJoinRequestDto {
                 .birthdate(this.birthdate)
                 .phone(this.phone)
                 .introduce(this.introduce)
+                .s3Url(this.s3Url)
                 .build();
     }
 }
