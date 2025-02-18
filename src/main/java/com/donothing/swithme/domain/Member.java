@@ -62,10 +62,13 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Column(nullable = false)
+    private String s3Url;
+
     // 자체 회원가입
     @Builder
     public Member(String email, String password, String name, String nickname, LoginType loginType, GenderType gender,
-                  LocalDate birthdate, String phone, String introduce, Authority authority) {
+                  LocalDate birthdate, String phone, String introduce, Authority authority, String s3Url) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -78,6 +81,7 @@ public class Member extends BaseTimeEntity {
         this.withdraw = false;
         this.temperature = 36.5;
         this.authority = authority;
+        this.s3Url = s3Url;
     }
 
     public Member(Long memberId) {

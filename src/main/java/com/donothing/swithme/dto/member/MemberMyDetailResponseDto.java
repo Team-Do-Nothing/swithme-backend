@@ -24,6 +24,7 @@ public class MemberMyDetailResponseDto {
     private String phone;
     private String introduce;
     private Double temperature;
+    private String s3Url;
 
 //    public static MemberMyDetailResponseDto of(Member member) {
 //        return new MemberMyDetailResponseDto(member.getEmail());
