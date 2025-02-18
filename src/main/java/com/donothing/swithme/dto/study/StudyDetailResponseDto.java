@@ -7,6 +7,7 @@ import com.donothing.swithme.dto.member.MemberInfoResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -52,6 +53,9 @@ public class StudyDetailResponseDto {
 
     @ApiModelProperty(value = "스터디 썸네일 이미지")
     private String s3Url;
+
+    @ApiModelProperty(value = "스터디 참여중인 멤버")
+    private List<MemberInfoResponseDto> studyMemberList;
 
     public StudyDetailResponseDto(Study study, long commentCnt) {
         this.studyId = study.getStudyId();
