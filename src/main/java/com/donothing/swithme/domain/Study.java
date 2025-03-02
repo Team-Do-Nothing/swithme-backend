@@ -24,6 +24,10 @@ public class Study {
     @Column(nullable = false, length = 100)
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category; // 스터디가 속한 카테고리
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StudyType studyType; // ONLINE, OFFLINE
@@ -52,7 +56,8 @@ public class Study {
 
     @Builder
     public Study(Member member, String title, StudyType studyType, int numberOfMembers, int remainingNumber,
-            String studyInfo, String s3Url, StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd) {
+            String studyInfo, String s3Url, StudyStatus studyStatus, String dateStudyStart, String dateStudyEnd
+            , Category category) {
         this.member = member;
         this.title = title;
         this.studyType = studyType;
@@ -63,6 +68,7 @@ public class Study {
         this.studyStatus = studyStatus;
         this.dateStudyStart = dateStudyStart;
         this.dateStudyEnd = dateStudyEnd;
+        this.category = category;
     }
 
     public void update(StudyUpdateRequestDto request) {

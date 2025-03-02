@@ -1,6 +1,7 @@
 package com.donothing.swithme.service;
 
 import com.donothing.swithme.domain.ApproveStatus;
+import com.donothing.swithme.domain.Category;
 import com.donothing.swithme.domain.Challenge;
 import com.donothing.swithme.domain.Comment;
 import com.donothing.swithme.domain.Member;
@@ -10,6 +11,7 @@ import com.donothing.swithme.domain.StudyStatus;
 import com.donothing.swithme.dto.challenge.ChallengeDetailResponseDto;
 import com.donothing.swithme.dto.study.*;
 import com.donothing.swithme.exception.ChallengeAlreadyJoinedException;
+import com.donothing.swithme.repository.CategoryRepository;
 import com.donothing.swithme.repository.ChallengeRepository;
 import com.donothing.swithme.repository.CommentCustomRepository;
 import com.donothing.swithme.repository.CommentRepository;
@@ -42,10 +44,14 @@ public class StudyService {
     private final MemberStudyRepository memberStudyRepository;
 
     private final ChallengeRepository challengeRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public StudyRegisterResponseDto registerStudy(StudyRegisterRequestDto request) {
-        Study study = studyRepository.save(request.toEntity());
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리 ID입니다: " + request.getCategoryId()));
+
+        Study study = studyRepository.save(request.toEntity(category));
 
         memberStudyRepository.save(MemberStudy.builder()
                         .study(study)

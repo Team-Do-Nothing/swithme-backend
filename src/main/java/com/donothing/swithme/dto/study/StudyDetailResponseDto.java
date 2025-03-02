@@ -23,6 +23,8 @@ public class StudyDetailResponseDto {
     @ApiModelProperty(value = "스터디 제목")
     private String title;
 
+
+
     private boolean isBookmarked = false;
 
     @ApiModelProperty(value = "스터디 타입")
@@ -30,6 +32,9 @@ public class StudyDetailResponseDto {
 
     @ApiModelProperty(value = "목표 인원수")
     private int numberOfMembers; // 목표 인원수
+
+    @ApiModelProperty(value = "스터디 카테고리")
+    private String categoryName; // 목표 인원수
 
     @ApiModelProperty(value = "남은 인원수")
     private int remainingNumber; // 참여 가능한 남은 인원수
@@ -65,6 +70,7 @@ public class StudyDetailResponseDto {
                 nickname(study.getMember().getNickname()).
                 build();
         this.title = study.getTitle();
+        this.categoryName = study.getCategory().getName();
         this.studyType = study.getStudyType();
         this.numberOfMembers = study.getNumberOfMembers();
         this.remainingNumber = study.getRemainingNumber();
@@ -85,6 +91,7 @@ public class StudyDetailResponseDto {
                 build();
         this.isBookmarked = isBookmarked;
         this.title = study.getTitle();
+        this.categoryName = study.getCategory().getName();
         this.studyType = study.getStudyType();
         this.numberOfMembers = study.getNumberOfMembers();
         this.remainingNumber = study.getRemainingNumber();
