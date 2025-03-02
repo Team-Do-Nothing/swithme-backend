@@ -28,8 +28,31 @@ public class StudyController {
     private final StudyService studyService;
 
     @PostMapping("/register")
-    @ApiOperation(value = "스터디 등록", notes = "스터디 등록하는 API 입니다.")
-    public ResponseEntity<ResponseDto<StudyRegisterResponseDto>> registerStudy(@RequestBody @Valid
+    @ApiOperation(value = "스터디 등록",
+            notes = "스터디 등록하는 API 입니다.\n\n"
+                    + "📌 **카테고리 목록**\n\n"
+                    + "1: 프로그래밍(대분류)\n"
+                    + "  - 5: 웹 개발\n"
+                    + "  - 6: 모바일 앱 개발\n"
+                    + "  - 7: 게임 개발\n"
+                    + "  - 8: 코딩테스트\n\n"
+                    + "2: 자격증(대분류)\n"
+                    + "  - 9: IT\n"
+                    + "  - 10: 금융\n"
+                    + "  - 11: 보건\n"
+                    + "  - 12: 역사\n"
+                    + "  - 13: 공학\n\n"
+                    + "3: 어학(대분류)\n"
+                    + "  - 14: 영어\n"
+                    + "  - 15: 중국어\n"
+                    + "  - 16: 일본어\n"
+                    + "  - 17: 독일어\n"
+                    + "  - 18: 프랑스어\n\n"
+                    + "4: 면접(대분류)\n"
+                    + "  - 19: 공기업\n"
+                    + "  - 20: 금융권\n"
+                    + "  - 21: 공학계열\n"
+                    + "  - 22: 어문계열")    public ResponseEntity<ResponseDto<StudyRegisterResponseDto>> registerStudy(@RequestBody @Valid
         StudyRegisterRequestDto request, @AuthenticationPrincipal UserDetails user) {
         request.setMemberId(Long.valueOf(user.getUsername()));
         return new ResponseEntity<>(new ResponseDto<>(201, "스터디 생성 성공",

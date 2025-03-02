@@ -1,5 +1,6 @@
 package com.donothing.swithme.dto.study;
 
+import com.donothing.swithme.domain.Category;
 import com.donothing.swithme.domain.Member;
 import com.donothing.swithme.domain.Study;
 import com.donothing.swithme.domain.StudyStatus;
@@ -21,9 +22,12 @@ import lombok.Setter;
 @Builder
 public class StudyRegisterRequestDto {
     @NotNull(message = "카테고리 아이디는 필수입니다.")
-    @ApiModelProperty(value = "카테고리 아이디", example = "1", required = true)
+    @ApiModelProperty(value = "카테고리 아이디",
+            example = "1",
+            required = true,
+            allowableValues = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22",
+            notes = "스터디가 속할 카테고리의 ID")
     private Long categoryId;
-
     @ApiModelProperty(hidden = true)
     private Long memberId;
 
@@ -62,10 +66,11 @@ public class StudyRegisterRequestDto {
     @ApiModelProperty(value = "스터디 마감날짜", required = true,  example = "2024-07-01")
     private String dateStudyEnd;
 
-    public Study toEntity() {
+    public Study toEntity(Category category) {
         return Study.builder()
                 .member(new Member(memberId))
                 .title(title)
+                .category(category)
                 .studyType(studyType)
                 .s3Url(s3Url)
                 .studyStatus(StudyStatus.CURR)
